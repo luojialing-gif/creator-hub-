@@ -1,0 +1,87 @@
+# electron-builder 配置 —— 跨平台打包（Windows / macOS）
+#
+# 产物：
+#   macOS  → release/CreatorHub-<version>-arm64.dmg、release/CreatorHub-<version>-x64.dmg
+#   Windows→ release/CreatorHub-Setup-<version>-x64.exe（NSIS 安装包）
+#            release/CreatorHub-Portable-<version>.exe（免安装便携版）
+#
+# 说明：
+#   1) 本项目 **不签名、不公证**，identity: null 表示明确走 ad-hoc / 未签名路径。
+#   2) 在 macOS 上打 Windows 包需要 wine；在 Windows 上打 macOS 包需要 macOS 环境。
+#      最省事的做法是用项目里的 .github/workflows/build.yml（GitHub Actions），
+#      两个平台各跑各的 runner，手动触发，产物传到 Artifacts。
+#   3) electronDownload.mirror 是给国内网络准备的；能直连官方源的话可以删掉这一段。
+
+appId: com.creatorhub.desktop
+# 注意：productName 决定产物文件名（.app/.dmg/.exe），保持 ASCII 以免安装路径/签名出问题。
+# 用户看到的「全媒体登录平台」这一显示名由两处决定：
+#   1) macOS：打包后 Info.plist 的 CFBundleDisplayName（tools/build_app.py 处理）
+#   2) 应用内窗口标题 / 侧栏品牌文字：src/main.js 的 app.setName + src/renderer/index.html
+productName: CreatorHub
+copyright: Copyright © 2026 CreatorHub
+
+directories:
+  output: release
+  buildResources: build
+
+# 只把运行必需的代码装进包，顺带天然排除测试 / 文档 / 本地数据
+files:
+  - src/**/*
+  - package.json
+  - "!**/*.map"
+  - "!**/*.md"
+  - "!**/*.DS_Store"
+
+asar: true
+npmRebuild: false
+
+# 国内网络加速 Electron 二进制下载（不需要时可整段删除）
+electronDownload:
+  mirror: https://npmmirror.com/mirrors/electron/
+
+mac:
+  category: public.app-category.productivity
+  icon: build/icon.icns
+  identity: null            # 不签名
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  target:
+    - target: dmg
+      arch:
+        - arm64
+        - x64
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+dmg:
+  title: ${productName} ${version}
+  contents:
+    - x: 130
+      y: 220
+      type: file
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+win:
+  icon: build/icon.ico
+  target:
+    - target: nsis
+      arch:
+        - x64
+    - target: portable
+      arch:
+        - x64
+  artifactName: ${productName}-${version}-${arch}.${ext}
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: CreatorHub
+  artifactName: ${productName}-Setup-${version}-${arch}.${ext}
+
+portable:
+  artifactName: ${productName}-Portable-${version}.${ext}

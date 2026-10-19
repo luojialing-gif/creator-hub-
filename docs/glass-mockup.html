@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CreatorHub · 玻璃风外观预览（内容不变）</title>
+<style>
+  :root {
+    --bg-warm:#E4C0A6; --bg-mid:#D4B8AC; --bg-low:#EBD7CC;
+    --stroke:rgba(255,255,255,.55);
+    --text-1:#3A2E28; --text-2:#6E5C52; --text-3:#9A887C;
+    --accent:#B66D44; --accent-soft:rgba(182,109,68,.14);
+    --radius:24px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; }
+  body {
+    font-family:"Plus Jakarta Sans","Manrope",-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;
+    color:var(--text-1);
+    background:
+      radial-gradient(120% 60% at 12% 0%, rgba(255,244,232,.9) 0%, rgba(255,244,232,0) 55%),
+      radial-gradient(90% 50% at 85% 12%, rgba(255,255,255,.5) 0%, rgba(255,255,255,0) 50%),
+      linear-gradient(160deg, var(--bg-warm) 0%, var(--bg-mid) 46%, var(--bg-low) 100%);
+    min-height:100vh; overflow-x:hidden;
+  }
+  .arc { position:fixed; border-radius:50%; pointer-events:none; z-index:0; border:2px solid rgba(255,255,255,.35); filter:blur(1px); }
+  .arc.a1 { width:130vw; height:130vw; top:-70vw; right:-40vw; border-color:rgba(255,255,255,.42); border-bottom-color:transparent; border-left-color:transparent; }
+  .arc.a2 { width:160vw; height:160vw; top:-90vw; left:-60vw; border-color:rgba(255,255,255,.28); border-top-color:transparent; }
+
+  .shell { position:relative; z-index:1; display:flex; min-height:100vh; max-width:1280px; margin:0 auto; }
+
+  /* ============ 左侧栏 ============ */
+  .sidebar { width:216px; flex:0 0 auto; padding:28px 18px; display:flex; flex-direction:column; gap:6px;
+    background:rgba(255,255,255,.30); backdrop-filter:blur(28px) saturate(140%); -webkit-backdrop-filter:blur(28px) saturate(140%);
+    border-right:1px solid rgba(255,255,255,.45); border-radius:0 var(--radius) var(--radius) 0; margin:20px 0; }
+  .brand { display:flex; align-items:center; gap:10px; padding:6px 10px 22px; }
+  .brand-mark { width:38px; height:38px; border-radius:12px; background:linear-gradient(145deg,#C97F52,#B66D44);
+    display:grid; place-items:center; color:#fff; font-weight:800; font-size:16px;
+    box-shadow:0 8px 20px rgba(182,109,68,.35), inset 0 1px 0 rgba(255,255,255,.5); }
+  .brand b { font-size:16px; }
+  .brand span { display:block; font-size:10px; color:var(--text-3); font-weight:600; letter-spacing:1.5px; }
+
+  .nav { position:relative; display:flex; flex-direction:column; gap:2px; }
+  .nav-pill { position:absolute; left:0; width:100%; height:44px; border-radius:14px; z-index:0;
+    background:linear-gradient(135deg, rgba(255,255,255,.66), rgba(255,255,255,.40));
+    backdrop-filter:blur(18px) saturate(150%); -webkit-backdrop-filter:blur(18px) saturate(150%);
+    border:1px solid rgba(255,255,255,.65);
+    box-shadow:0 6px 18px rgba(122,84,60,.14), inset 0 1px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(255,255,255,.25);
+    transition:transform .48s cubic-bezier(.34,1.56,.4,1); will-change:transform; }
+  .nav-pill::after { content:''; position:absolute; inset:0; border-radius:14px; pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,255,255,.7), rgba(255,255,255,0) 38%); }
+  .nav-item { position:relative; z-index:1; height:44px; display:flex; align-items:center; gap:11px; padding:0 14px;
+    border-radius:14px; cursor:pointer; border:none; background:none; font:inherit; font-size:13.5px; font-weight:600;
+    color:var(--text-2); text-align:left; transition:color .3s; }
+  .nav-item .dot { width:9px; height:9px; border-radius:50%; background:var(--text-3); opacity:.55; transition:all .3s; }
+  .nav-item .count { margin-left:auto; font-size:11px; font-weight:700; color:var(--text-3); font-variant-numeric:tabular-nums; }
+  .nav-item.active { color:var(--accent); }
+  .nav-item.active .dot { background:var(--accent); opacity:1; box-shadow:0 0 0 4px var(--accent-soft); }
+  .nav-item.active .count { color:var(--accent); }
+  .side-foot { margin-top:auto; padding:14px 10px 4px; font-size:11px; color:var(--text-3); line-height:1.7; }
+
+  /* ============ 主区 ============ */
+  .main { flex:1; padding:34px 36px 40px; display:flex; flex-direction:column; gap:26px; min-width:0; }
+  .topbar { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .page-title { font-size:30px; font-weight:800; letter-spacing:-.5px; }
+  .page-title small { display:block; font-size:11px; font-weight:600; color:var(--text-3); letter-spacing:2.5px; margin-top:2px; }
+
+  /* —— 顶部工具条：玻璃胶囊滑块 —— */
+  .toolbar { margin-left:auto; position:relative; display:flex; gap:2px; padding:5px;
+    border-radius:999px; background:rgba(255,255,255,.34); backdrop-filter:blur(20px) saturate(140%); -webkit-backdrop-filter:blur(20px) saturate(140%);
+    border:1px solid rgba(255,255,255,.5); box-shadow:0 8px 24px rgba(122,84,60,.10), inset 0 1px 0 rgba(255,255,255,.7); }
+  .tb-pill { position:absolute; top:5px; bottom:5px; border-radius:999px; z-index:0;
+    background:linear-gradient(135deg, rgba(255,255,255,.78), rgba(255,255,255,.5));
+    border:1px solid rgba(255,255,255,.75); box-shadow:0 4px 14px rgba(122,84,60,.16), inset 0 1px 0 rgba(255,255,255,.9);
+    transition:transform .46s cubic-bezier(.34,1.56,.4,1), width .46s cubic-bezier(.34,1.56,.4,1); will-change:transform,width; }
+  .tb-btn { position:relative; z-index:1; border:none; background:none; font:inherit; cursor:pointer; font-size:12.5px;
+    font-weight:700; color:var(--text-2); padding:9px 18px; border-radius:999px; transition:color .3s; }
+  .tb-btn.active { color:var(--accent); }
+
+  /* ============ 卡片区（内容 = 软件现有） ============ */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:22px; }
+  .card { position:relative; border-radius:var(--radius); padding:20px 20px 16px;
+    background:linear-gradient(160deg, rgba(255,255,255,.60), rgba(255,255,255,.42));
+    backdrop-filter:blur(28px) saturate(140%); -webkit-backdrop-filter:blur(28px) saturate(140%);
+    border:1px solid var(--stroke);
+    box-shadow:0 18px 40px rgba(122,84,60,.16), 0 2px 6px rgba(122,84,60,.06), inset 0 1px 0 rgba(255,255,255,.85);
+    overflow:hidden; transform-style:preserve-3d; transition:transform .5s cubic-bezier(.22,1,.36,1), box-shadow .5s; cursor:pointer; }
+  .card .glow { position:absolute; inset:-1px; pointer-events:none; opacity:0; transition:opacity .4s;
+    background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.55), rgba(255,231,208,.25) 40%, transparent 70%); }
+  .card:hover .glow { opacity:1; }
+  .card .rim { position:absolute; inset:0; border-radius:var(--radius); pointer-events:none; opacity:0; transition:opacity .4s; padding:1px;
+    background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,.95), rgba(255,214,182,.55) 45%, transparent 75%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude; }
+  .card:hover .rim { opacity:1; }
+  .card::before { content:''; position:absolute; top:0; left:8%; right:8%; height:1px;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent); }
+  .card:hover { box-shadow:0 26px 56px rgba(122,84,60,.22), 0 4px 10px rgba(122,84,60,.08), inset 0 1px 0 rgba(255,255,255,.9); }
+
+  .card-top { display:flex; align-items:center; gap:10px; }
+  .plat-badge { min-width:38px; height:38px; padding:0 8px; border-radius:12px; display:grid; place-items:center;
+    color:#fff; font-weight:800; font-size:13px; box-shadow:inset 0 1px 0 rgba(255,255,255,.45), 0 6px 14px rgba(122,84,60,.22); }
+  .plat-badge.douyin { background:linear-gradient(145deg,#2B2B2E,#111114); }
+  .plat-badge.xhs { background:linear-gradient(145deg,#E7A471,#C5A0AB); }
+  .plat-badge.wxch { background:linear-gradient(145deg,#7FA96B,#5F8A50); }
+  .plat-badge.ks { background:linear-gradient(145deg,#E8864B,#C96A33); }
+  .card-alias { font-weight:700; font-size:15px; }
+  .pill { margin-left:auto; font-size:11px; font-weight:700; padding:4px 11px; border-radius:999px; background:var(--accent-soft); color:var(--accent); }
+  .pill[data-status="pending"] { background:rgba(58,46,40,.07); color:var(--text-3); }
+  .pill[data-status="loggedout"] { background:rgba(182,109,68,.14); color:var(--accent); }
+  .card-note { margin-top:8px; font-size:12.5px; color:var(--text-2); line-height:1.55; }
+  .kv { display:flex; gap:6px; align-items:baseline; font-size:11.5px; color:var(--text-3); margin-top:4px; }
+  .kv b { font-weight:500; flex:0 0 46px; }
+  .kv span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--text-2); }
+  .health-dot.ok { color:#6E9A5E; }
+  .health-dot.warn { color:var(--accent); }
+  .card-extra-toggle { display:inline-flex; align-items:center; gap:4px; margin-top:6px; padding:2px 0; border:none;
+    background:none; color:var(--text-3); font:inherit; font-size:11px; cursor:pointer; opacity:.75; }
+  .card-extra-toggle:hover { opacity:1; color:var(--text-2); }
+  .card-extra-toggle svg { transition:transform .15s ease; }
+  .card-extra-toggle.open svg { transform:rotate(180deg); }
+  .card-extra { display:none; margin-top:6px; padding-top:6px; border-top:1px dashed rgba(255,255,255,.6); }
+  .card-extra.open { display:block; }
+  .card-actions { display:flex; gap:8px; margin-top:16px; flex-wrap:wrap; align-items:center; }
+  .btn { border:none; font:inherit; font-size:12.5px; font-weight:700; cursor:pointer; padding:9px 16px; border-radius:12px; transition:transform .2s; }
+  .btn:active { transform:scale(.97); }
+  .btn.primary { color:#fff; background:linear-gradient(145deg,#C97F52,#B66D44); box-shadow:0 8px 18px rgba(182,109,68,.35), inset 0 1px 0 rgba(255,255,255,.4); }
+  .btn.primary.grow { flex:1 1 auto; }
+  .btn.ghost { color:var(--text-2); background:rgba(255,255,255,.5); border:1px solid rgba(255,255,255,.7); box-shadow:inset 0 1px 0 rgba(255,255,255,.8); }
+  .mini-actions { display:flex; gap:2px; margin-left:auto; }
+  .icon-btn { width:30px; height:30px; border-radius:10px; border:none; background:rgba(255,255,255,.45);
+    display:grid; place-items:center; color:var(--text-3); cursor:pointer; transition:all .2s; }
+  .icon-btn:hover { color:var(--text-2); background:rgba(255,255,255,.7); }
+  .icon-btn.danger:hover { color:#B4533F; }
+  .footer-note { font-size:11px; color:var(--text-3); text-align:center; padding:8px 0 4px; }
+  .badge-mock { position:fixed; top:18px; right:20px; z-index:9; font-size:11px; font-weight:800; letter-spacing:1px;
+    color:#fff; background:rgba(27,27,25,.85); padding:7px 14px; border-radius:999px; box-shadow:0 8px 20px rgba(0,0,0,.25); }
+</style>
+</head>
+<body>
+<div class="badge-mock">仅外观预览 · 内容=软件现有</div>
+<div class="arc a1"></div><div class="arc a2"></div>
+
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">C</div><div><b>CreatorHub</b><span>GLASS</span></div></div>
+    <nav class="nav" id="sideNav">
+      <div class="nav-pill" id="sidePill"></div>
+      <button class="nav-item active" data-nav="0"><span class="dot"></span>全部平台<span class="count">9</span></button>
+      <button class="nav-item" data-nav="1"><span class="dot"></span>抖音<span class="count">3</span></button>
+      <button class="nav-item" data-nav="2"><span class="dot"></span>小红书<span class="count">2</span></button>
+      <button class="nav-item" data-nav="3"><span class="dot"></span>视频号<span class="count">2</span></button>
+      <button class="nav-item" data-nav="4"><span class="dot"></span>快手<span class="count">2</span></button>
+    </nav>
+    <div class="side-foot">登录态守护 · 全部正常<br>上次落盘 2 分钟前</div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div class="page-title">全部平台<small>CREATOR WORKBENCH</small></div>
+      <div class="toolbar" id="toolbar">
+        <div class="tb-pill" id="tbPill"></div>
+        <button class="tb-btn active" data-tb="0">账号列表</button>
+        <button class="tb-btn" data-tb="1">巡检登录态</button>
+        <button class="tb-btn" data-tb="2">设置</button>
+      </div>
+    </div>
+
+    <div class="grid" id="cards"></div>
+    <div class="footer-note">样机 · 仅外观 · 无新增内容</div>
+  </main>
+</div>
+
+<script>
+/* ============ 玻璃胶囊滑块 ============ */
+function mountPill(container, pill, items, vertical) {
+  function moveTo(el, first) {
+    if (vertical) {
+      const y = el.offsetTop, h = el.offsetHeight;
+      pill.style.transition = first ? 'none' : 'transform .48s cubic-bezier(.34,1.56,.4,1)';
+      if (!first) {
+        pill.style.transform = 'translateY(' + (y + (h-44)/2) + 'px) scaleY(1.18)';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          pill.style.transform = 'translateY(' + y + 'px) scaleY(1)';
+        }));
+      } else { pill.style.transform = 'translateY(' + y + 'px)'; }
+    } else {
+      const x = el.offsetLeft, w = el.offsetWidth;
+      pill.style.width = w + 'px';
+      pill.style.transition = first ? 'none' : 'transform .46s cubic-bezier(.34,1.56,.4,1), width .46s cubic-bezier(.34,1.56,.4,1)';
+      if (!first) {
+        pill.style.transform = 'translateX(' + x + 'px) scaleX(1.14)';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          pill.style.transform = 'translateX(' + x + 'px) scaleX(1)';
+        }));
+      } else { pill.style.transform = 'translateX(' + x + 'px)'; }
+    }
+  }
+  function activate(el, first) {
+    items.forEach(i => i.classList.remove('active')); el.classList.add('active'); moveTo(el, first);
+  }
+  items.forEach(el => el.addEventListener('click', () => activate(el)));
+  requestAnimationFrame(() => moveTo(container.querySelector('.active') || items[0], true));
+  window.addEventListener('resize', () => moveTo(container.querySelector('.active'), true));
+}
+mountPill(document.getElementById('sideNav'), document.getElementById('sidePill'),
+  [...document.querySelectorAll('#sideNav .nav-item')], true);
+mountPill(document.getElementById('toolbar'), document.getElementById('tbPill'),
+  [...document.querySelectorAll('#toolbar .tb-btn')], false);
+
+/* ============ 卡片数据：内容 = 软件真实字段 ============ */
+const MOCK = [
+  { p:'douyin', abbr:'抖', alias:'娱乐狸花酱', status:'正常', note:'综艺二创 · 主号', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+  { p:'douyin', abbr:'抖', alias:'会火', status:'待发布', note:'切片搬运 + 观点向', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+  { p:'douyin', abbr:'抖', alias:'影像的十三帧', status:'正常', note:'', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+  { p:'xhs', abbr:'书', alias:'娱乐狸花酱', status:'正常', note:'图文种草 + 综艺安利', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+  { p:'xhs', abbr:'书', alias:'会火', status:'未登录', note:'小号 · 测试', health:{label:'疑似失效', tone:'warn', when:'检测于 5 分钟前'} },
+  { p:'wxch', abbr:'视', alias:'娱乐狸花酱', status:'正常', note:'视频号主阵地', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+  { p:'ks', abbr:'快', alias:'会火', status:'待发布', note:'快手分发', health:{label:'正常', tone:'ok', when:'检测于 2 分钟前'} },
+];
+
+const host = document.getElementById('cards');
+host.innerHTML = MOCK.map(m => `
+  <article class="card" data-tilt>
+    <div class="glow"></div><div class="rim"></div>
+    <div class="card-top">
+      <span class="plat-badge ${m.p}">${m.abbr}</span>
+      <span class="card-alias">${m.alias}</span>
+      <span class="pill" data-status="${m.status==='正常'?'normal':m.status==='待发布'?'pending':'loggedout'}">${m.status}</span>
+    </div>
+    ${m.note ? '<div class="card-note">'+m.note+'</div>' : ''}
+    <div class="kv"><b>登录态</b><span class="health-dot ${m.health.tone}">${m.health.label} · ${m.health.when}</span></div>
+    <button class="card-extra-toggle" data-extra><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg>技术详情</button>
+    <div class="card-extra">
+      <div class="kv"><b>打开到</b><span>https://creator.douyin.com/creator-micro/home</span></div>
+      <div class="kv"><b>分区</b><span>persist:${m.p}-account-1</span></div>
+      <div class="kv"><b>本地凭据</b><span>已在本机落盘（${m.p}）· 刚刚</span></div>
+    </div>
+    <div class="card-actions">
+      <button class="btn primary grow">打开工作台</button>
+      <button class="btn ghost">新窗口</button>
+      <div class="mini-actions">
+        <button class="icon-btn" title="上移"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 15l6-6 6 6"/></svg></button>
+        <button class="icon-btn" title="下移"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 9l6 6 6-6"/></svg></button>
+        <button class="icon-btn" title="复制打开链接"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5h10"/></svg></button>
+        <button class="icon-btn" title="编辑"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 20h4l10-10-4-4L4 16z"/></svg></button>
+        <button class="icon-btn danger" title="删除"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button>
+      </div>
+    </div>
+  </article>`).join('');
+
+/* 技术详情展开（纯外观） */
+host.addEventListener('click', e => {
+  const t = e.target.closest('.card-extra-toggle'); if (!t) return;
+  const c = t.closest('.card'); t.classList.toggle('open');
+  c.querySelector('.card-extra').classList.toggle('open');
+});
+
+/* ============ 光斑 + 边缘提亮 + ≤4° 3D 倾斜 ============ */
+const MAX_TILT = 4;
+document.querySelectorAll('[data-tilt]').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+    card.style.setProperty('--mx', (px*100).toFixed(2)+'%');
+    card.style.setProperty('--my', (py*100).toFixed(2)+'%');
+    const rx = (0.5-py)*MAX_TILT*2, ry = (px-0.5)*MAX_TILT*2;
+    card.style.transform = `perspective(900px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-2px)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+node_modules/
+.DS_Store
+*.log
+npm-debug.log*
+
+# electron-builder 产物（mac 的 dmg/zip、win 的 exe）
+release/
+
+# 本地零依赖打包产物：可随时用 npm run build:app 重新生成
+dist/
+
+# ⚠️ build/ 里同时放着 electron-builder 需要的图标（icon.icns / icon.ico / icon.png），
+# 这些必须入库，否则 GitHub Actions 打不出安装包。
+# 所以这里忽略的是「目录内容」而不是「目录本身」，再把图标显式排除出来。
+build/*
+!build/icon.icns
+!build/icon.ico
+!build/icon.png
+!build/icon-1024.png
+
+# 本机账号数据与登录态分区：绝不能进仓库
+accounts.json
+accounts.backup.json
+Partitions/
+
+# electron-builder 本地打包的临时目录 / 缓存（沙箱里为绕过限制而设）
+.ebtmp/
+.ebcache/
+.fakehome/

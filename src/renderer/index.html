@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
+    />
+    <title>全媒体登录平台</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ============================ 顶栏 ============================ -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">全</div>
+        <div>
+          <div class="brand-text">全媒体登录平台</div>
+          <div class="brand-sub">抖音 · 小红书 · 视频号 · 快手</div>
+        </div>
+      </div>
+
+      <div class="search-wrap">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input id="searchInput" class="search" type="text" placeholder="搜索账号 / 备注 / 平台（⌘K）" data-act="search" />
+      </div>
+
+      <div class="spacer"></div>
+
+      <button class="btn primary" data-act="add-account">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        添加账号
+      </button>
+      <div class="btn-group">
+        <button class="btn" data-act="import" title="从 JSON 文件导入账号配置">导入</button>
+        <button class="btn" data-act="export" title="导出账号配置为 JSON（不含任何登录凭据）">导出</button>
+      </div>
+      <button class="btn icon" data-act="toggle-theme" title="切换深浅色">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
+        </svg>
+      </button>
+      <button class="btn icon" data-act="settings" title="设置与数据目录">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3" />
+          <path d="M19.4 15a7.9 7.9 0 00.1-1 7.9 7.9 0 00-.1-1l2-1.6-2-3.4-2.4 1a8 8 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a8 8 0 00-1.7 1l-2.4-1-2 3.4L4.5 13a7.9 7.9 0 000 2l-2 1.6 2 3.4 2.4-1a8 8 0 001.7 1l.4 2.5h4l.4-2.5a8 8 0 001.7-1l2.4 1 2-3.4z" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- ============================ 主体 ============================ -->
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="side-title">平台</div>
+        <div id="platformList"></div>
+        <div class="side-foot">
+          每个账号使用独立的登录态分区，互不顶号。<br />
+          账号数据与登录态都只存在本机。
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- ---------- 账号列表视图 ---------- -->
+        <section class="panel" id="listView">
+          <div class="panel-head" id="listHead"></div>
+          <div class="cards-scroll">
+            <div id="cards" class="cards"></div>
+          </div>
+        </section>
+
+        <!-- ---------- 内嵌工作台视图 ---------- -->
+        <section class="panel hidden" id="browserView">
+          <div class="browser-bar" id="browserBar"></div>
+          <div class="view-host" id="viewHost"></div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-root" id="modalRoot"></div>
+    <div class="toast-root" id="toastRoot"></div>
+    <div id="menuLayer"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>全媒体登录平台 · Web 版（导航聚合）</title>
+<style>
+:root{
+  --bg:#f4f5f7;--bg-elev:#fff;--bg-soft:#fafbfc;--bg-sunken:#eceef2;
+  --border:#e6e8ec;--border-strong:#d5d9e0;
+  --text:#1b1e25;--text-2:#5b6373;--text-3:#8d95a4;
+  --accent:#4356d6;--accent-hover:#374dc4;--accent-soft:#eef0fe;--accent-text:#fff;
+  --danger:#d94a34;--danger-soft:#fdeeeb;--ok:#128f5a;--ok-soft:#e8f6ef;
+  --warn:#9a6b00;--warn-soft:#fdf3e0;
+  --shadow-sm:0 1px 2px rgba(20,24,35,.06);--shadow-md:0 6px 20px rgba(20,24,35,.1);--shadow-lg:0 18px 48px rgba(20,24,35,.18);
+  --radius-sm:7px;--radius:10px;--radius-lg:14px;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+}
+html[data-theme="dark"]{
+  --bg:#15171c;--bg-elev:#1d2027;--bg-soft:#21252d;--bg-sunken:#101215;
+  --border:#2b303a;--border-strong:#3a4150;
+  --text:#e9ebf0;--text-2:#a4acba;--text-3:#7b8494;
+  --accent:#7f92ff;--accent-hover:#93a3ff;--accent-soft:#262c46;--accent-text:#12141a;
+  --danger:#ff7b64;--danger-soft:#3a2320;--ok:#46c98d;--ok-soft:#1c332a;
+  --warn:#e0b25a;--warn-soft:#33291a;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);--shadow-md:0 8px 24px rgba(0,0,0,.45);--shadow-lg:0 20px 52px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  font-size:13.5px;line-height:1.55;-webkit-font-smoothing:antialiased;
+  min-height:100vh;display:flex;flex-direction:column;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button,input,select,textarea{font-family:inherit;font-size:inherit;color:inherit}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--border-strong);border:3px solid transparent;background-clip:padding-box;border-radius:8px}
+::-webkit-scrollbar-thumb:hover{background:var(--text-3);background-clip:padding-box}
+::-webkit-scrollbar-track{background:transparent}
+
+/* 顶栏 */
+.topbar{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:10px;padding:10px 16px;
+  background:var(--bg-elev);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;user-select:none}
+.brand-mark{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#4356d6,#7a5cf0);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700;box-shadow:var(--shadow-sm)}
+.brand-text{font-weight:650;letter-spacing:.2px}
+.brand-sub{color:var(--text-3);font-size:11.5px}
+.spacer{flex:1 1 auto;min-width:6px}
+.search-wrap{position:relative;flex:0 1 300px;min-width:140px}
+.search-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--text-3)}
+input.search{width:100%;padding:7px 10px 7px 30px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--bg-soft);outline:none;transition:border-color .15s,background .15s}
+input.search:focus{border-color:var(--accent);background:var(--bg-elev)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--bg-elev);cursor:pointer;white-space:nowrap;
+  transition:background .15s,border-color .15s,color .15s,transform .08s;min-height:34px}
+.btn:hover{background:var(--bg-soft);border-color:var(--border-strong)}
+.btn:active{transform:translateY(1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text);font-weight:600}
+.btn.primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn.danger{color:var(--danger)}
+.btn.danger:hover{background:var(--danger-soft);border-color:var(--danger)}
+.btn.icon{padding:7px 9px}
+.btn-group{display:flex;gap:6px;flex-wrap:wrap}
+
+/* 布局 */
+.layout{flex:1 1 auto;display:flex;min-height:0;align-items:flex-start}
+.sidebar{position:sticky;top:60px;flex:0 0 214px;border-right:1px solid var(--border);background:var(--bg-elev);
+  padding:12px 10px;min-height:calc(100vh - 60px)}
+.side-title{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--text-3);padding:4px 8px 8px;font-weight:600}
+.side-item{display:flex;align-items:center;gap:9px;width:100%;padding:8px 9px;margin-bottom:2px;
+  border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;cursor:pointer;text-align:left;
+  transition:background .15s,border-color .15s}
+.side-item:hover{background:var(--bg-soft)}
+.side-item.active{background:var(--accent-soft);border-color:var(--accent)}
+.side-dot{width:9px;height:9px;border-radius:3px;background:var(--pc,var(--text-3));flex:0 0 auto}
+.side-name{flex:1 1 auto;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side-count{flex:0 0 auto;min-width:20px;text-align:center;padding:1px 6px;border-radius:20px;
+  background:var(--bg-sunken);color:var(--text-2);font-size:11.5px;font-variant-numeric:tabular-nums}
+.side-item.active .side-count{background:var(--accent);color:var(--accent-text)}
+.side-foot{margin-top:14px;padding:10px 9px 4px;border-top:1px solid var(--border);color:var(--text-3);font-size:11.5px;line-height:1.7}
+.main{flex:1 1 auto;min-width:0;padding:0 0 40px}
+.panel-head{display:flex;align-items:center;gap:10px;padding:16px 18px 10px;flex-wrap:wrap}
+.panel-title{display:flex;align-items:baseline;gap:9px;min-width:0}
+.panel-title h2{margin:0;font-size:16px;font-weight:650}
+.panel-title .muted{color:var(--text-3);font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(292px,1fr));gap:12px;padding:4px 18px 0}
+
+/* 卡片 */
+.card{position:relative;background:var(--bg-elev);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 13px 10px 15px;box-shadow:var(--shadow-sm);transition:box-shadow .16s,border-color .16s}
+.card::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 3px 3px 0;background:var(--pc,var(--accent))}
+.card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong)}
+.card.dragging{opacity:.4}
+.card.drop-before::after,.card.drop-after::after{content:"";position:absolute;left:8px;right:8px;height:2px;background:var(--accent);border-radius:2px}
+.card.drop-before::after{top:-1px}.card.drop-after::after{bottom:-1px}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.plat-badge{flex:0 0 auto;width:22px;height:22px;border-radius:6px;background:var(--pc,var(--accent));color:#fff;
+  display:grid;place-items:center;font-size:11.5px;font-weight:700}
+html[data-theme="dark"] .plat-badge{color:#12141a}
+.card-alias{flex:1 1 auto;font-weight:620;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{flex:0 0 auto;font-size:11px;padding:1px 8px;border-radius:20px;background:var(--bg-sunken);color:var(--text-2);white-space:nowrap}
+.pill[data-status="normal"]{background:var(--ok-soft);color:var(--ok)}
+.pill[data-status="pending"]{background:var(--warn-soft);color:var(--warn)}
+.pill[data-status="loggedout"]{background:var(--accent-soft);color:var(--accent)}
+.pill[data-status="disabled"]{background:var(--bg-sunken);color:var(--text-3)}
+.card-note{color:var(--text-2);font-size:12.5px;margin:2px 0 8px;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden}
+.card-note.empty{color:var(--text-3);font-style:italic}
+.kv{display:flex;gap:6px;align-items:baseline;font-size:11.5px;color:var(--text-3);margin-bottom:3px}
+.kv b{font-weight:500;flex:0 0 46px}
+.kv span{font-family:var(--mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)}
+.kv span.plain{font-family:inherit}
+/* 卡片「技术详情」折叠区：默认收起，点击后展开（纯界面行为） */
+.card-extra-toggle{display:inline-flex;align-items:center;gap:4px;margin:4px 0 0;padding:2px 0;border:none;
+  background:none;color:var(--text-3);font-size:11px;cursor:pointer;opacity:.75}
+.card-extra-toggle:hover{opacity:1;color:var(--text-2)}
+.card-extra-toggle svg{transition:transform .15s ease}
+.card-extra-toggle.open svg{transform:rotate(180deg)}
+.card-extra{display:none;margin-top:4px;padding-top:6px;border-top:1px dashed var(--border)}
+.card-extra.open{display:block}
+.card-actions{display:flex;gap:6px;margin-top:10px;padding-top:9px;border-top:1px dashed var(--border);flex-wrap:wrap}
+.card-actions .btn{padding:5px 9px;font-size:12px;min-height:30px}
+.card-actions .grow{flex:1 1 auto;justify-content:center}
+.mini-actions{display:flex;gap:2px;margin-left:auto}
+.icon-btn{border:none;background:transparent;color:var(--text-3);width:26px;height:26px;border-radius:5px;cursor:pointer;display:grid;place-items:center;padding:0}
+.icon-btn:hover{background:var(--bg-sunken);color:var(--text)}
+.icon-btn.danger:hover{background:var(--danger-soft);color:var(--danger)}
+.touch-only{display:none}
+
+/* 提示条 / 空状态 */
+.notice{background:var(--bg-soft);border:1px solid var(--border);border-left:3px solid var(--accent);
+  border-radius:var(--radius-sm);padding:11px 13px;font-size:12px;color:var(--text-2);line-height:1.75}
+.notice.warn{border-left-color:var(--warn);background:var(--warn-soft);color:var(--text)}
+.notice.danger{border-left-color:var(--danger);background:var(--danger-soft);color:var(--text)}
+.banner{margin:0 18px;font-size:12.5px}
+.banner .row{display:flex;gap:10px;align-items:flex-start}
+.banner .row>div{flex:1 1 auto}
+.empty{border:1px dashed var(--border-strong);border-radius:var(--radius-lg);padding:40px 22px;text-align:center;
+  color:var(--text-2);background:var(--bg-elev);margin:0 18px}
+.empty h3{margin:12px 0 6px;font-size:15px;color:var(--text)}
+.empty p{margin:0 auto 14px;max-width:480px;font-size:12.5px;line-height:1.75}
+.empty-mark{width:46px;height:46px;border-radius:14px;margin:0 auto;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent)}
+
+/* 内嵌尝试面板 */
+.embed{margin:4px 18px 0;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-elev);overflow:hidden}
+.embed-bar{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.embed-bar b{font-weight:620}
+.embed-frame-wrap{position:relative;height:min(62vh,660px);background:#fff}
+html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
+.embed-frame-wrap iframe{width:100%;height:100%;border:0;display:block}
+.embed-msg{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:26px;background:var(--bg)}
+.embed-msg.show{display:grid}
+.embed-msg .inner{max-width:520px}
+.embed-msg h3{margin:14px 0 8px;font-size:15px;color:var(--text)}
+.embed-msg p{margin:0 0 8px;font-size:12.5px;line-height:1.8;color:var(--text-2)}
+.badge-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11.5px;
+  padding:2px 8px;border-radius:6px;background:var(--bg-sunken);color:var(--text-2);word-break:break-all}
+.spinner{width:13px;height:13px;border:2px solid var(--border-strong);border-top-color:var(--accent);border-radius:50%;
+  animation:spin .7s linear infinite;display:inline-block;vertical-align:-2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 弹层 */
+.modal-root{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(18,21,28,.4);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:100;padding:24px}
+.modal-root.open{display:flex}
+.modal{width:100%;max-width:560px;max-height:88vh;overflow-y:auto;background:var(--bg-elev);border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-lg)}
+.modal.wide{max-width:660px}
+.modal-head{display:flex;align-items:center;gap:10px;padding:15px 18px;border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--bg-elev);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.modal-head h3{margin:0;font-size:15px;font-weight:650;flex:1 1 auto}
+.modal-body{padding:16px 18px}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:13px 18px;border-top:1px solid var(--border);
+  position:sticky;bottom:0;background:var(--bg-elev);border-radius:0 0 var(--radius-lg) var(--radius-lg);flex-wrap:wrap}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+.field .hint{font-size:11.5px;color:var(--text-3);margin-top:4px;line-height:1.6}
+.field input,.field select,.field textarea{width:100%;padding:7px 10px;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--bg-soft);outline:none;transition:border-color .15s}
+.field textarea{resize:vertical;min-height:62px;line-height:1.6}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);background:var(--bg-elev)}
+.field-row{display:flex;gap:10px;flex-wrap:wrap}
+.field-row .field{flex:1 1 140px}
+.switch-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.switch-row:last-child{border-bottom:none}
+.switch-row .txt{flex:1 1 auto}
+.switch-row .txt b{display:block;font-size:12.5px;font-weight:600}
+.switch-row .txt span{font-size:11.5px;color:var(--text-3);line-height:1.65}
+.switch{flex:0 0 auto;width:38px;height:22px;border-radius:20px;border:1px solid var(--border-strong);
+  background:var(--bg-sunken);position:relative;cursor:pointer;transition:background .16s,border-color .16s;margin-top:2px}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;
+  background:var(--bg-elev);box-shadow:var(--shadow-sm);transition:transform .16s}
+.switch.on{background:var(--accent);border-color:var(--accent)}
+.switch.on::after{transform:translateX(16px);background:#fff}
+.scroll-box{max-height:170px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:8px 10px;background:var(--bg-soft);font-size:11.5px;line-height:1.9}
+.scroll-box code{font-family:var(--mono);font-size:11px;background:var(--bg-sunken);padding:1px 6px;border-radius:4px;word-break:break-all}
+
+/* Toast */
+.toast-root{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);display:flex;flex-direction:column;
+  gap:8px;z-index:200;pointer-events:none;align-items:center;max-width:92vw}
+.toast{background:var(--bg-elev);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);
+  padding:9px 15px;font-size:12.5px;max-width:520px;animation:toast-in .2s ease-out}
+.toast.ok{border-left:3px solid var(--ok)}
+.toast.warn{border-left:3px solid var(--warn)}
+.toast.err{border-left:3px solid var(--danger)}
+.toast.info{border-left:3px solid var(--accent)}
+@keyframes toast-in{from{opacity:0;transform:translateY(8px)}}
+
+/* 响应式 */
+@media (max-width:1000px){
+  .sidebar{flex-basis:170px}
+  .brand-sub{display:none}
+  .cards{grid-template-columns:repeat(auto-fill,minmax(258px,1fr))}
+}
+@media (max-width:820px){
+  .layout{flex-direction:column}
+  .sidebar{position:static;flex:0 0 auto;width:100%;display:flex;gap:6px;overflow-x:auto;border-right:none;
+    border-bottom:1px solid var(--border);padding:8px 10px;min-height:0;align-items:center;-webkit-overflow-scrolling:touch}
+  .side-title,.side-foot{display:none}
+  .side-item{width:auto;margin:0;flex:0 0 auto;padding:8px 12px;border-color:var(--border);background:var(--bg-soft);min-height:40px}
+  .side-name{flex:0 0 auto}
+  .panel-head{padding:12px 13px 8px}
+  .cards{grid-template-columns:1fr;padding:4px 13px 0}
+  .empty,.banner,.embed{margin-left:13px;margin-right:13px}
+  .search-wrap{flex:1 1 100%;order:5}
+  .topbar{padding:9px 13px 11px}
+  .modal-root{padding:12px}
+  input.search,.field input,.field select,.field textarea{font-size:16px}
+  .btn{min-height:40px}
+  .card-actions .btn{min-height:40px;padding:8px 10px}
+  .icon-btn{width:34px;height:34px}
+  .touch-only{display:inline-flex}
+  .embed-frame-wrap{height:min(58vh,520px)}
+}
+</style>
+</head>
+<body>
+<!-- ============================ 顶栏 ============================ -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-mark">全</div>
+    <div>
+      <div class="brand-text">全媒体登录平台<span class="brand-sub" style="font-weight:400"> · Web 版</span></div>
+      <div class="brand-sub">抖音 · 小红书 · 视频号 · 快手</div>
+    </div>
+  </div>
+
+  <div class="search-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+      <circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>
+    </svg>
+    <input id="searchInput" class="search" type="text" placeholder="搜索账号 / 备注 / 平台" />
+  </div>
+
+  <div class="spacer"></div>
+
+  <button class="btn primary" data-act="add-account">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+    添加账号
+  </button>
+  <div class="btn-group">
+    <button class="btn" data-act="import">导入</button>
+    <button class="btn" data-act="export">导出</button>
+  </div>
+  <button class="btn icon" data-act="toggle-theme" title="切换深浅色">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/>
+    </svg>
+  </button>
+  <button class="btn icon" data-act="settings" title="设置与说明">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a7.9 7.9 0 00.1-1 7.9 7.9 0 00-.1-1l2-1.6-2-3.4-2.4 1a8 8 0 00-1.7-1l-.4-2.5h-4l-.4 2.5a8 8 0 00-1.7 1l-2.4-1-2 3.4L4.5 13a7.9 7.9 0 000 2l-2 1.6 2 3.4 2.4-1a8 8 0 001.7 1l.4 2.5h4l.4-2.5a8 8 0 001.7-1l2.4 1 2-3.4z"/>
+    </svg>
+  </button>
+</header>
+
+<!-- ============================ 主体 ============================ -->
+<div class="layout">
+  <aside class="sidebar">
+    <div class="side-title">平台</div>
+    <div id="platformList"></div>
+    <div class="side-foot">
+      纯网页版：点击账号用新标签打开平台。<br />
+      第三方登录态由浏览器自己管理，本页无法隔离，也不会读取。
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="bannerBox"></div>
+    <div class="panel-head" id="listHead"></div>
+    <div id="embedBox"></div>
+    <div id="cards" class="cards"></div>
+  </main>
+</div>
+
+<div class="modal-root" id="modalRoot"></div>
+<div class="toast-root" id="toastRoot"></div>
+<input type="file" id="importFile" accept="application/json,.json" style="display:none" />
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     常量与状态
+     ============================================================ */
+
+  var LS_ACCOUNTS = 'creator-hub-web.accounts.v1';
+  var LS_SETTINGS = 'creator-hub-web.settings.v1';
+
+  var PLATFORMS = [
+    { id: 'douyin', name: '抖音', abbr: '抖', color: '#20232E', colorDark: '#9AA3B8',
+      entry: 'https://creator.douyin.com/creator-micro/home',
+      note: '抖音创作者中心' },
+    { id: 'xhs', name: '小红书', abbr: '书', color: '#FF2442', colorDark: '#FF5C70',
+      entry: 'https://creator.xiaohongshu.com/publish/publish?source=&published=true',
+      note: '小红书创作服务平台' },
+    { id: 'wxch', name: '视频号', abbr: '视', color: '#07C160', colorDark: '#2FD07F',
+      entry: 'https://channels.weixin.qq.com/login.html',
+      note: '微信视频号助手（通常需扫码登录）' },
+    { id: 'kuaishou', name: '快手', abbr: '快', color: '#FF6A00', colorDark: '#FF8A3D',
+      entry: 'https://cp.kuaishou.com/article/manage/video?status=1&from=publish',
+      note: '快手创作服务平台' }
+  ];
+
+  var STATUSES = ['normal', 'pending', 'loggedout', 'disabled'];
+  var STATUS_LABEL = { normal: '正常', pending: '待发布', loggedout: '未登录', disabled: '停用' };
+
+  var state = {
+    accounts: [],
+    settings: { theme: 'system', bannerClosed: false, lastPlatform: 'all' },
+    ui: {
+      platform: 'all',
+      q: '',
+      modalOpen: false,
+      embed: null,      // { id, url, status: 'trying' | 'loaded' | 'blocked', accountAlias }
+      dragId: null,
+      drop: null,
+      seed: null        // 供无头截图使用的测试数据集注入点（正常使用时恒为 null）
+    }
+  };
+
+  var pendingConfirm = null;
+  var currentEditId = '';
+
+  /* 卡片「技术详情」展开状态：纯界面偏好，只存在内存里，不落盘 */
+  var extraOpen = {};
+
+  /* ============================================================
+     工具
+     ============================================================ */
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function $(id) { return document.getElementById(id); }
+
+  function platformOf(id) {
+    for (var i = 0; i < PLATFORMS.length; i += 1) if (PLATFORMS[i].id === id) return PLATFORMS[i];
+    return { id: id, name: id, abbr: '?', color: '#888', colorDark: '#aaa', entry: '', note: '' };
+  }
+
+  function isPlatform(id) {
+    for (var i = 0; i < PLATFORMS.length; i += 1) if (PLATFORMS[i].id === id) return true;
+    return false;
+  }
+
+  function uid() {
+    return 'acc_' + Math.random().toString(36).slice(2, 8) + Date.now().toString(36).slice(-4);
+  }
+
+  function fmtTime(ts) {
+    if (!ts) return '从未打开';
+    var diff = Date.now() - ts;
+    if (diff < 60000) return '刚刚打开';
+    if (diff < 3600000) return Math.floor(diff / 60000) + ' 分钟前打开';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + ' 小时前打开';
+    var d = new Date(ts);
+    function p(n) { return n < 10 ? '0' + n : String(n); }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  function cleanUrl(v) {
+    var s = String(v == null ? '' : v).trim();
+    if (!s) return '';
+    if (!/^https?:\/\//i.test(s)) return null;
+    return s;
+  }
+
+  function findAccount(id) {
+    for (var i = 0; i < state.accounts.length; i += 1) if (state.accounts[i].id === id) return state.accounts[i];
+    return null;
+  }
+
+  function accountsOf(platformId) {
+    return state.accounts
+      .filter(function (a) { return platformId === 'all' || a.platform === platformId; })
+      .sort(function (a, b) {
+        if (a.sort !== b.sort) return a.sort - b.sort;
+        return (a.createdAt || 0) - (b.createdAt || 0);
+      });
+  }
+
+  function filteredAccounts() {
+    var q = state.ui.q.trim().toLowerCase();
+    return accountsOf(state.ui.platform).filter(function (a) {
+      if (!q) return true;
+      return (a.alias || '').toLowerCase().indexOf(q) !== -1 ||
+             (a.note || '').toLowerCase().indexOf(q) !== -1 ||
+             (a.url || '').toLowerCase().indexOf(q) !== -1 ||
+             platformOf(a.platform).name.toLowerCase().indexOf(q) !== -1;
+    });
+  }
+
+  function openUrlOf(a) {
+    return a.url || platformOf(a.platform).entry;
+  }
+
+  /* ============================================================
+     本地存储（localStorage，只存账号配置，不存任何平台登录凭据）
+     ============================================================ */
+
+  function safeParse(raw, fallback) {
+    try {
+      var v = JSON.parse(raw);
+      return v == null ? fallback : v;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
+  function normalizeAccount(input, existing, list) {
+    var src = input || {};
+    var base = existing || {};
+    var platform = isPlatform(src.platform) ? src.platform : base.platform;
+    if (!isPlatform(platform)) return { error: '平台不合法' };
+
+    var alias = String(src.alias != null ? src.alias : base.alias || '').replace(/\s+/g, ' ').trim().slice(0, 60);
+    if (!alias) return { error: '账号别名不能为空' };
+
+    var url = base.url || platformOf(platform).entry;
+    if (src.url !== undefined) {
+      var cu = cleanUrl(src.url);
+      if (cu === null) return { error: 'URL 必须以 http:// 或 https:// 开头' };
+      url = cu || url;
+    }
+
+    var status = STATUSES.indexOf(src.status) !== -1 ? src.status : (base.status || 'normal');
+    var sort = base.sort;
+    if (src.sort !== undefined && src.sort !== null && src.sort !== '') {
+      var n = Number(src.sort);
+      sort = isFinite(n) ? Math.max(0, Math.round(n)) : base.sort;
+    }
+    if (typeof sort !== 'number' || !isFinite(sort)) sort = 100;
+
+    return {
+      account: {
+        id: base.id || String(src.id || uid()),
+        platform: platform,
+        alias: alias,
+        note: src.note !== undefined ? String(src.note).replace(/\s+/g, ' ').trim().slice(0, 500) : (base.note || ''),
+        url: url,
+        status: status,
+        sort: sort,
+        createdAt: base.createdAt || Date.now(),
+        lastOpenedAt: base.lastOpenedAt || null
+      }
+    };
+  }
+
+  function loadState() {
+    var rawAccounts = safeParse(localStorage.getItem(LS_ACCOUNTS), []);
+    if (!Array.isArray(rawAccounts)) rawAccounts = [];
+    var out = [];
+    rawAccounts.forEach(function (item) {
+      var r = normalizeAccount(item, null, out);
+      if (!r.error) out.push(r.account);
+    });
+    state.accounts = out;
+
+    var s = safeParse(localStorage.getItem(LS_SETTINGS), {});
+    state.settings = {
+      theme: ['system', 'light', 'dark'].indexOf(s.theme) !== -1 ? s.theme : 'system',
+      bannerClosed: !!s.bannerClosed,
+      lastPlatform: isPlatform(s.lastPlatform) || s.lastPlatform === 'all' ? s.lastPlatform : 'all'
+    };
+    state.ui.platform = state.settings.lastPlatform || 'all';
+
+    // 支持 ?seed=1 或 #p=douyin 直接定位，方便分享与自查
+    var hash = (location.hash || '').replace(/^#/, '');
+    var m = /(?:^|&)p=([a-z]+)/.exec(hash);
+    if (m && (isPlatform(m[1]) || m[1] === 'all')) state.ui.platform = m[1];
+  }
+
+  function saveAccounts() {
+    try {
+      localStorage.setItem(LS_ACCOUNTS, JSON.stringify(state.accounts));
+      return true;
+    } catch (e) {
+      toast('本地保存失败：' + e.message, 'err');
+      return false;
+    }
+  }
+
+  function saveSettings() {
+    try {
+      localStorage.setItem(LS_SETTINGS, JSON.stringify(state.settings));
+    } catch (e) { /* 忽略 */ }
+  }
+
+  /* ============================================================
+     主题
+     ============================================================ */
+
+  function resolvedTheme() {
+    var t = state.settings.theme || 'system';
+    if (t === 'system') {
+      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    return t;
+  }
+
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', resolvedTheme());
+  }
+
+  function injectPlatformCSS() {
+    var light = [], dark = [];
+    PLATFORMS.forEach(function (p) {
+      light.push('[data-platform="' + p.id + '"]{--pc:' + p.color + '}');
+      dark.push('html[data-theme="dark"] [data-platform="' + p.id + '"]{--pc:' + (p.colorDark || p.color) + '}');
+    });
+    var el = document.createElement('style');
+    el.id = 'platform-colors';
+    el.textContent = light.join('') + dark.join('');
+    document.head.appendChild(el);
+  }
+
+  /* ============================================================
+     Toast
+     ============================================================ */
+
+  function toast(message, kind) {
+    var root = $('toastRoot');
+    if (!root) return;
+    var el = document.createElement('div');
+    el.className = 'toast ' + (kind || 'info');
+    el.textContent = message;
+    root.appendChild(el);
+    setTimeout(function () {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 3800);
+  }
+
+  /* ============================================================
+     弹层
+     ============================================================ */
+
+  function openModal(html, opts) {
+    var root = $('modalRoot');
+    if (!root) return;
+    root.innerHTML = '<div class="modal' + (opts && opts.wide ? ' wide' : '') + '">' + html + '</div>';
+    root.classList.add('open');
+    state.ui.modalOpen = true;
+  }
+
+  function closeModal() {
+    var root = $('modalRoot');
+    if (!root) return;
+    root.innerHTML = '';
+    root.classList.remove('open');
+    state.ui.modalOpen = false;
+  }
+
+  function confirmModal(opts) {
+    var html = '';
+    html += '<div class="modal-head"><h3>' + esc(opts.title) + '</h3></div>';
+    html += '<div class="modal-body"><div class="notice' + (opts.danger === false ? '' : ' warn') + '">' + opts.body + '</div></div>';
+    html += '<div class="modal-foot"><button class="btn" data-act="modal-close">取消</button>' +
+            '<button class="btn ' + (opts.danger === false ? 'primary' : 'danger') + '" data-act="modal-confirm">' +
+            esc(opts.confirmText || '确定') + '</button></div>';
+    openModal(html, {});
+    pendingConfirm = function () {
+      closeModal();
+      if (opts.onConfirm) opts.onConfirm();
+    };
+  }
+
+  /* ============================================================
+     渲染（render* 之间互不调用，统一由 refreshAll 调度）
+     ============================================================ */
+
+  function renderSidebar() {
+    var host = $('platformList');
+    if (!host) return;
+    var dark = resolvedTheme() === 'dark';
+    var html = '';
+    html += '<button class="side-item' + (state.ui.platform === 'all' ? ' active' : '') +
+            '" data-act="pick-platform" data-platform="all">' +
+            '<span class="side-dot" style="background:linear-gradient(135deg,#4356d6,#7a5cf0)"></span>' +
+            '<span class="side-name">全部账号</span><span class="side-count">' + state.accounts.length + '</span></button>';
+    PLATFORMS.forEach(function (p) {
+      var n = state.accounts.filter(function (a) { return a.platform === p.id; }).length;
+      html += '<button class="side-item' + (state.ui.platform === p.id ? ' active' : '') +
+              '" data-act="pick-platform" data-platform="' + p.id + '" data-platform-attr="' + p.id +
+              '" style="--pc:' + (dark ? p.colorDark || p.color : p.color) + '">' +
+              '<span class="side-dot"></span><span class="side-name">' + esc(p.name) + '</span>' +
+              '<span class="side-count">' + n + '</span></button>';
+    });
+    host.innerHTML = html;
+  }
+
+  function renderBanner() {
+    var host = $('bannerBox');
+    if (!host) return;
+    if (state.settings.bannerClosed) { host.innerHTML = ''; return; }
+    host.innerHTML =
+      '<div class="banner notice warn" style="margin-bottom:4px"><div class="row">' +
+      '<div><b>先读这条：纯网页版无法隔离第三方登录态。</b><br />' +
+      '浏览器里同一平台的 Cookie 是共享的，本页做不到「A 账号和 B 账号同时登录同一平台」。' +
+      '所以这里只做<b>账号导航聚合</b>：点击账号用新标签打开对应后台，登录态交给浏览器保存。<br />' +
+      '要真正隔离多账号，请用 Chrome 的多个用户（个人资料）、Edge 工作区，或 Firefox 的容器标签；' +
+      '抖音/小红书/快手/视频号这类后台都禁止 iframe 嵌入，所以本页默认不内嵌。' +
+      '需要「一个窗口内多账号各带独立登录态」，请用本项目的 Electron 版。</div>' +
+      '<button class="btn icon" data-act="close-banner" title="不再提示">' +
+      '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+      '</button></div></div>';
+  }
+
+  function renderHead() {
+    var host = $('listHead');
+    if (!host) return;
+    var list = filteredAccounts();
+    var title = state.ui.platform === 'all' ? '全部账号' : platformOf(state.ui.platform).name;
+    var counts = { normal: 0, pending: 0, loggedout: 0, disabled: 0 };
+    list.forEach(function (a) { if (counts[a.status] !== undefined) counts[a.status] += 1; });
+
+    var html = '';
+    html += '<div class="panel-title"><h2>' + esc(title) + '</h2><span class="muted">' +
+            list.length + ' 个账号' +
+            (state.ui.q ? '（筛选自 ' + accountsOf(state.ui.platform).length + ' 个）' : '') + '</span></div>';
+    html += '<div class="spacer"></div>';
+    if (list.length) {
+      html += '<span class="badge-chip" title="状态统计">正常 ' + counts.normal + ' · 待发布 ' + counts.pending +
+              ' · 未登录 ' + counts.loggedout + ' · 停用 ' + counts.disabled + '</span>';
+      html += '<div class="btn-group">' +
+              '<button class="btn" data-act="bulk-open" data-filter="all">打开全部</button>' +
+              '<button class="btn" data-act="bulk-open" data-filter="loggedout">打开未登录</button>' +
+              '<button class="btn" data-act="bulk-open" data-filter="pending">打开待发布</button>' +
+              '</div>';
+    }
+    host.innerHTML = html;
+  }
+
+  function syncEmbedMessages() {
+    var e = state.ui.embed;
+    var msg = $('embedMsg');
+    if (!e || !msg) return;
+    var blocked = e.status === 'blocked';
+    var trying = e.status === 'trying';
+    msg.classList.toggle('show', blocked || trying);
+
+    var title = $('embedMsgTitle');
+    if (title) {
+      title.textContent = trying ? '正在尝试内嵌…' : '该平台禁止嵌入，请点击新标签打开';
+    }
+    var desc = $('embedMsgDesc');
+    if (desc) {
+      desc.textContent = trying
+        ? '等待 ' + platformOf(findAccount(e.id) ? findAccount(e.id).platform : '').name +
+          ' 的页面响应，最多 8 秒；如果 8 秒内没有响应，就说明该平台拒绝了嵌入。'
+        : '抖音 / 小红书 / 视频号 / 快手的创作者后台都设置了 X-Frame-Options 或 CSP frame-ancestors，' +
+          '不允许被其他网站放进 iframe。这不是本页的故障 —— 点击下面的「新标签打开」即可正常使用。';
+    }
+    var status = $('embedStatus');
+    if (status) {
+      status.textContent = trying ? '尝试中…' : blocked ? '已确认不可嵌入' : '已加载（若为空白页，说明同样被拒绝）';
+    }
+    var icon = $('embedMsgIcon');
+    if (icon) {
+      icon.style.background = blocked ? 'var(--danger-soft)' : 'var(--accent-soft)';
+      icon.style.color = blocked ? 'var(--danger)' : 'var(--accent)';
+    }
+  }
+
+  function renderEmbed() {
+    var box = $('embedBox');
+    if (!box) return;
+    var e = state.ui.embed;
+    if (!e) {
+      if (box.innerHTML !== '') box.innerHTML = '';
+      return;
+    }
+    var acc = findAccount(e.id);
+    var p = acc ? platformOf(acc.platform) : { name: '', abbr: '?', color: '#888', colorDark: '#aaa' };
+    var frame = $('embedFrame');
+
+    if (!frame || frame.getAttribute('data-account') !== e.id) {
+      var html = '';
+      html += '<div class="embed" data-platform="' + (acc ? acc.platform : '') + '">';
+      html += '<div class="embed-bar">';
+      html += '<span class="plat-badge">' + esc(p.abbr) + '</span>';
+      html += '<b>' + esc(acc ? acc.alias : '') + '</b>';
+      html += '<span class="badge-chip">' + esc(e.url) + '</span>';
+      html += '<span class="muted" id="embedStatus" style="color:var(--text-3);font-size:11.5px"></span>';
+      html += '<div class="spacer"></div>';
+      html += '<button class="btn primary" data-act="embed-newtab" data-id="' + e.id + '">新标签打开</button>';
+      html += '<button class="btn" data-act="embed-reload">重新尝试</button>';
+      html += '<button class="btn" data-act="embed-close">收起</button>';
+      html += '</div>';
+      html += '<div class="embed-frame-wrap">';
+      html += '<iframe id="embedFrame" data-account="' + e.id + '" src="' + esc(e.url) + '" ' +
+              'referrerpolicy="no-referrer" sandbox="allow-scripts allow-forms allow-same-origin allow-popups"></iframe>';
+      html += '<div class="embed-msg" id="embedMsg"><div class="inner">';
+      html += '<div class="empty-mark" id="embedMsgIcon">' +
+              '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">' +
+              '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5M16 4v5"/></svg></div>';
+      html += '<h3 id="embedMsgTitle"></h3><p id="embedMsgDesc"></p>';
+      html += '<div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">' +
+              '<button class="btn primary" data-act="embed-newtab" data-id="' + e.id + '">新标签打开</button>' +
+              '<button class="btn" data-act="copy-link" data-id="' + e.id + '">复制链接</button>' +
+              '<button class="btn" data-act="embed-close">收起内嵌</button></div>';
+      html += '</div></div></div></div>';
+      box.innerHTML = html;
+
+      var f = $('embedFrame');
+      if (f) {
+        f.addEventListener('load', function () {
+          var cur = state.ui.embed;
+          if (cur && cur.status === 'trying') {
+            cur.status = 'loaded';
+            syncEmbedMessages();
+          }
+        });
+      }
+      startEmbedTimer(e.id);
+      syncEmbedMessages();
+      return;
+    }
+    syncEmbedMessages();
+  }
+
+  var embedTimer = null;
+
+  function startEmbedTimer(accountId) {
+    if (embedTimer) clearTimeout(embedTimer);
+    embedTimer = setTimeout(function () {
+      var e = state.ui.embed;
+      if (e && e.id === accountId && e.status === 'trying') {
+        e.status = 'blocked';
+        syncEmbedMessages();
+      }
+    }, 8000);
+  }
+
+  function renderCards() {
+    var host = $('cards');
+    if (!host) return;
+    var list = filteredAccounts();
+
+    if (!list.length) {
+      var noAccountAtAll = state.accounts.length === 0;
+      host.innerHTML =
+        '<div class="empty" style="margin:0;grid-column:1/-1">' +
+        '<div class="empty-mark">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">' +
+        '<path d="M3 7h18v13H3z"/><path d="M8 7V5h8v2"/></svg></div>' +
+        '<h3>' + (state.ui.q ? '没有匹配的账号' : noAccountAtAll ? '先添加第一个账号' : '这个平台下还没有账号') + '</h3>' +
+        '<p>' + (state.ui.q ? '换个关键词试试，或清空搜索框查看全部账号。'
+              : noAccountAtAll ? '账号别名、备注、登录入口都会保存在这台设备的浏览器里（localStorage），不会上传到任何服务器。'
+              : '可以为该平台添加多个账号，点击卡片即用新标签打开对应后台。') + '</p>' +
+        '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">' +
+        '<button class="btn primary" data-act="add-account"' + (state.ui.platform === 'all' ? '' : ' data-platform="' + state.ui.platform + '"') + '>添加账号</button>' +
+        (noAccountAtAll ? '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' : '') +
+        '</div></div>';
+      return;
+    }
+
+    var html = '';
+    list.forEach(function (a) {
+      var p = platformOf(a.platform);
+      html += '<article class="card" data-platform="' + a.platform + '" data-id="' + a.id + '" draggable="true">' +
+        '<div class="card-top">' +
+        '<span class="plat-badge">' + esc(p.abbr) + '</span>' +
+        '<span class="card-alias" title="' + esc(a.alias) + '">' + esc(a.alias) + '</span>' +
+        '<span class="pill" data-status="' + esc(a.status) + '">' + esc(STATUS_LABEL[a.status] || a.status) + '</span>' +
+        '</div>' +
+        (a.note ? '<div class="card-note">' + esc(a.note) + '</div>' : '') +
+        '<div class="kv"><b>登录态</b><span class="plain">由浏览器保存 · ' + esc(fmtTime(a.lastOpenedAt)) + '</span></div>' +
+        '<button class="card-extra-toggle' + (extraOpen[a.id] ? ' open' : '') + '" data-act="toggle-extra" data-id="' + a.id +
+        '" aria-expanded="' + (extraOpen[a.id] ? 'true' : 'false') + '" title="展开/收起该账号的技术信息（不影响任何功能）">' +
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>技术详情</button>' +
+        '<div class="card-extra' + (extraOpen[a.id] ? ' open' : '') + '">' +
+        '<div class="kv"><b>打开到</b><span title="' + esc(openUrlOf(a)) + '">' + esc(openUrlOf(a)) + '</span></div>' +
+        '</div>' +
+        '<div class="card-actions">' +
+        '<button class="btn primary grow" data-act="open-account" data-id="' + a.id + '">打开工作台</button>' +
+        '<button class="btn" data-act="try-embed" data-id="' + a.id + '" title="尝试内嵌（这四个平台通常会拒绝）">尝试内嵌</button>' +
+        '<div class="mini-actions">' +
+        '<button class="icon-btn touch-only" data-act="move-up" data-id="' + a.id + '" title="上移">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>' +
+        '<button class="icon-btn touch-only" data-act="move-down" data-id="' + a.id + '" title="下移">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' +
+        '<button class="icon-btn" data-act="copy-link" data-id="' + a.id + '" title="复制链接">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5h10"/></svg></button>' +
+        '<button class="icon-btn" data-act="edit-account" data-id="' + a.id + '" title="编辑">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 20h4l10-10-4-4L4 16z"/></svg></button>' +
+        '<button class="icon-btn danger" data-act="delete-account" data-id="' + a.id + '" title="删除">' +
+        '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 7h14M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button>' +
+        '</div></div></article>';
+    });
+    host.innerHTML = html;
+  }
+
+  function refreshAll() {
+    renderSidebar();
+    renderBanner();
+    renderHead();
+    renderEmbed();
+    renderCards();
+  }
+
+  /* ============================================================
+     账号操作
+     ============================================================ */
+
+  function openInNewTab(id) {
+    var a = findAccount(id);
+    if (!a) return;
+    var url = openUrlOf(a);
+    var w = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!w) {
+      toast('浏览器拦截了新标签，请允许本站弹出窗口后重试', 'warn');
+      return;
+    }
+    a.lastOpenedAt = Date.now();
+    saveAccounts();
+    renderCards();
+    toast('已在浏览器新标签打开：' + a.alias + '（登录态由浏览器保存）', 'ok');
+  }
+
+  function startEmbed(id) {
+    var a = findAccount(id);
+    if (!a) return;
+    state.ui.embed = { id: id, url: openUrlOf(a), status: 'trying' };
+    refreshAll();
+    toast('正在尝试内嵌，最多等待 8 秒；这四个平台通常都会拒绝嵌入', 'info');
+  }
+
+  function closeEmbed() {
+    if (embedTimer) clearTimeout(embedTimer);
+    state.ui.embed = null;
+    refreshAll();
+  }
+
+  function copyLink(id) {
+    var a = findAccount(id);
+    if (!a) return;
+    var text = openUrlOf(a);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        toast('链接已复制', 'ok');
+      }, function () {
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      toast('链接已复制', 'ok');
+    } catch (e) {
+      toast('复制失败，请手动复制：' + text, 'warn');
+    }
+    document.body.removeChild(ta);
+  }
+
+  function removeAccount(id) {
+    var a = findAccount(id);
+    if (!a) return;
+    confirmModal({
+      title: '删除账号',
+      confirmText: '删除',
+      body: '将从列表中移除「<b>' + esc(a.alias) + '</b>」（' + esc(platformOf(a.platform).name) +
+            '）。<br />只删除本地的这条账号配置，浏览器里该平台的登录状态不会被清除（本页也无权清除）。',
+      onConfirm: function () {
+        state.accounts = state.accounts.filter(function (x) { return x.id !== id; });
+        saveAccounts();
+        if (state.ui.embed && state.ui.embed.id === id) state.ui.embed = null;
+        refreshAll();
+        toast('已删除账号', 'ok');
+      }
+    });
+  }
+
+  function bulkOpen(filter) {
+    var list = accountsOf(state.ui.platform).filter(function (a) {
+      return filter === 'all' ? true : a.status === filter;
+    });
+    if (!list.length) { toast('没有符合条件的账号', 'warn'); return; }
+    var blocked = 0;
+    list.forEach(function (a, i) {
+      setTimeout(function () {
+        var w = window.open(openUrlOf(a), '_blank', 'noopener,noreferrer');
+        if (!w) blocked += 1;
+        a.lastOpenedAt = Date.now();
+        saveAccounts();
+        renderCards();
+      }, i * 320);
+    });
+    toast('正在打开 ' + list.length + ' 个账号，每个都是独立标签页' +
+          (blocked ? '（有 ' + blocked + ' 个被浏览器拦截，请允许弹出窗口）' : ''), blocked ? 'warn' : 'ok');
+  }
+
+  function reorder(platform, orderedIds) {
+    var list = state.accounts.filter(function (a) { return a.platform === platform; });
+    var map = {};
+    list.forEach(function (a) { map[a.id] = a; });
+    var seq = 10;
+    orderedIds.forEach(function (id) {
+      if (map[id]) { map[id].sort = seq; seq += 10; delete map[id]; }
+    });
+    Object.keys(map).forEach(function (id) {
+      map[id].sort = seq;
+      seq += 10;
+    });
+    saveAccounts();
+    refreshAll();
+  }
+
+  function moveOne(id, dir) {
+    var acc = findAccount(id);
+    if (!acc) return;
+    var ids = accountsOf(acc.platform).map(function (a) { return a.id; });
+    var i = ids.indexOf(id);
+    var j = dir === 'up' ? i - 1 : i + 1;
+    if (i < 0 || j < 0 || j >= ids.length) return;
+    ids.splice(i, 1);
+    ids.splice(j, 0, id);
+    reorder(acc.platform, ids);
+  }
+
+  function quickSeed() {
+    var created = 0;
+    PLATFORMS.forEach(function (p) {
+      var n = state.accounts.filter(function (a) { return a.platform === p.id; }).length;
+      for (var i = n + 1; i <= 3; i += 1) {
+        var r = normalizeAccount({
+          platform: p.id,
+          alias: p.name + '账号' + i,
+          note: '示例账号位，可改名或删除',
+          url: p.entry,
+          status: i === 1 ? 'normal' : i === 2 ? 'pending' : 'loggedout',
+          sort: i * 10
+        }, null, state.accounts);
+        if (!r.error) { state.accounts.push(r.account); created += 1; }
+      }
+    });
+    saveAccounts();
+    closeModal();
+    refreshAll();
+    toast('已创建 ' + created + ' 个账号位，可逐个改别名', 'ok');
+  }
+
+  /* ============================================================
+     导入 / 导出
+     ============================================================ */
+
+  function exportAccounts() {
+    var payload = {
+      kind: 'creator-hub-accounts',
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      note: '纯网页版导出：仅含账号别名/备注/URL/排序/状态，不含任何第三方登录 Cookie 或密码。',
+      settings: { theme: state.settings.theme },
+      accounts: state.accounts.map(function (a) {
+        return { platform: a.platform, alias: a.alias, note: a.note, url: a.url, status: a.status, sort: a.sort };
+      })
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '全媒体登录平台-账号-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+    toast('已导出 ' + payload.accounts.length + ' 个账号', 'ok');
+  }
+
+  function importPayload(payload) {
+    if (!payload || !Array.isArray(payload.accounts)) return { error: '文件格式不正确：缺少 accounts 数组' };
+    var added = 0, updated = 0, skipped = 0;
+    payload.accounts.forEach(function (item) {
+      var existing = null;
+      state.accounts.forEach(function (a) {
+        if (a.platform === item.platform && a.alias === item.alias) existing = a;
+      });
+      var r = normalizeAccount(item, existing, state.accounts);
+      if (r.error) { skipped += 1; return; }
+      if (existing) {
+        var idx = state.accounts.indexOf(existing);
+        state.accounts[idx] = r.account;
+        updated += 1;
+      } else {
+        state.accounts.push(r.account);
+        added += 1;
+      }
+    });
+    if (payload.settings && ['system', 'light', 'dark'].indexOf(payload.settings.theme) !== -1) {
+      state.settings.theme = payload.settings.theme;
+      saveSettings();
+      applyTheme();
+    }
+    saveAccounts();
+    closeModal();
+    refreshAll();
+    return { added: added, updated: updated, skipped: skipped };
+  }
+
+  /* ============================================================
+     账号表单
+     ============================================================ */
+
+  function platformOptions(selected) {
+    return PLATFORMS.map(function (p) {
+      return '<option value="' + p.id + '"' + (p.id === selected ? ' selected' : '') + '>' + esc(p.name) + '</option>';
+    }).join('');
+  }
+
+  function openAccountModal(id, presetPlatform) {
+    var acc = id ? findAccount(id) : null;
+    var platform = acc ? acc.platform
+      : presetPlatform || (state.ui.platform === 'all' ? PLATFORMS[0].id : state.ui.platform);
+    var p = platformOf(platform);
+
+    var html = '';
+    html += '<div class="modal-head"><h3>' + (acc ? '编辑账号' : '添加账号') + '</h3></div>';
+    html += '<div class="modal-body">';
+    html += '<div class="field"><label>平台</label><select id="f-platform">' + platformOptions(platform) + '</select></div>';
+    html += '<div class="field"><label>账号别名 <span style="color:var(--danger)">*</span></label>' +
+            '<input id="f-alias" type="text" maxlength="60" placeholder="例如：' + esc(p.name) +
+            '·主号 / 矩阵号A" value="' + esc(acc ? acc.alias : '') + '" /></div>';
+    html += '<div class="field-row">' +
+            '<div class="field"><label>状态标签</label><select id="f-status">' +
+            STATUSES.map(function (s) {
+              return '<option value="' + s + '"' + ((acc ? acc.status : 'normal') === s ? ' selected' : '') + '>' +
+                     esc(STATUS_LABEL[s]) + '</option>';
+            }).join('') + '</select></div>' +
+            '<div class="field"><label>排序权重</label><input id="f-sort" type="text" value="' +
+            esc(acc ? acc.sort : '') + '" placeholder="越小越靠前，留空自动" /></div></div>';
+    html += '<div class="field"><label>登录入口 URL</label><input id="f-url" type="text" spellcheck="false" value="' +
+            esc(acc ? acc.url : p.entry) + '" /><div class="hint">点击「打开工作台」时新标签访问这个地址。</div></div>';
+    html += '<div class="field"><label>备注</label><textarea id="f-note" maxlength="500" ' +
+            'placeholder="账号用途、发布方向、注意事项…">' + esc(acc ? acc.note : '') + '</textarea></div>';
+    html += '<div class="notice">纯网页版不会保存该平台的密码，也不会读取浏览器的登录 Cookie —— ' +
+            '登录态完全由你的浏览器管理。</div>';
+    html += '</div>';
+    html += '<div class="modal-foot"><button class="btn" data-act="modal-close">取消</button>' +
+            '<button class="btn primary" data-act="save-account">保存</button></div>';
+
+    openModal(html, {});
+    currentEditId = acc ? acc.id : '';
+    var aliasInput = $('f-alias');
+    if (aliasInput) aliasInput.focus();
+
+    var sel = $('f-platform');
+    if (sel) {
+      sel.addEventListener('change', function () {
+        var np = platformOf(sel.value);
+        var urlInput = $('f-url');
+        if (urlInput) {
+          var v = urlInput.value.trim();
+          var isDefault = PLATFORMS.some(function (x) { return x.entry === v; });
+          if (!v || isDefault) urlInput.value = np.entry;
+        }
+      });
+    }
+  }
+
+  function submitAccountForm(id) {
+    var platform = $('f-platform').value;
+    var alias = $('f-alias').value.trim();
+    var status = $('f-status').value;
+    var sortRaw = $('f-sort').value.trim();
+    var url = $('f-url').value.trim();
+    var note = $('f-note').value;
+
+    if (!alias) { toast('请填写账号别名', 'err'); $('f-alias').focus(); return; }
+    if (url && !/^https?:\/\//i.test(url)) { toast('登录入口 URL 必须以 http:// 或 https:// 开头', 'err'); return; }
+
+    var payload = { platform: platform, alias: alias, status: status, url: url, note: note };
+    if (sortRaw !== '') payload.sort = Number(sortRaw);
+
+    var existing = id ? findAccount(id) : null;
+    var r = normalizeAccount(payload, existing, state.accounts);
+    if (r.error) { toast(r.error, 'err'); return; }
+
+    if (existing) {
+      state.accounts[state.accounts.indexOf(existing)] = r.account;
+    } else {
+      state.accounts.push(r.account);
+    }
+    saveAccounts();
+    closeModal();
+    refreshAll();
+    toast((existing ? '已保存：' : '已添加账号：') + alias, 'ok');
+  }
+
+  /* ============================================================
+     设置
+     ============================================================ */
+
+  function openSettingsModal() {
+    var s = state.settings;
+    var html = '';
+    html += '<div class="modal-head"><h3>设置与说明</h3></div>';
+    html += '<div class="modal-body">';
+
+    html += '<div class="switch-row"><div class="txt"><b>外观</b><span>跟随系统 / 浅色 / 深色</span></div>' +
+            '<select id="s-theme" style="width:108px;padding:5px 8px;border:1px solid var(--border);border-radius:7px;background:var(--bg-soft)">' +
+            ['system', 'light', 'dark'].map(function (t) {
+              var label = t === 'system' ? '跟随系统' : t === 'light' ? '浅色' : '深色';
+              return '<option value="' + t + '"' + (s.theme === t ? ' selected' : '') + '>' + label + '</option>';
+            }).join('') + '</select></div>';
+
+    html += '<div class="switch-row"><div class="txt"><b>重置首页提示条</b>' +
+            '<span>重新显示「纯网页版无法隔离第三方登录态」的说明。</span></div>' +
+            '<button class="switch' + (s.bannerClosed ? '' : ' on') + '" data-act="toggle-banner" aria-label="切换提示条"></button></div>';
+
+    html += '<div class="notice warn" style="margin:6px 0 12px"><b>多账号隔离的正确做法</b><br />' +
+            '纯网页做不到隔离，但浏览器自带的方案可以：<br />' +
+            '· <b>Chrome</b>：右上角头像 → 添加「个人资料」，每个资料开一个窗口，各账号登录态互不干扰；<br />' +
+            '· <b>Edge</b>：用「工作区」或同样用多个个人资料；<br />' +
+            '· <b>Firefox</b>：用「容器标签」（Multi-Account Containers 扩展）在同一窗口里按容器隔离登录态。<br />' +
+            '本页只负责把这些账号集中成一张导航卡片，点一下就到对应后台。</div>';
+
+    html += '<div class="switch-row"><div class="txt"><b>数据存放位置</b>' +
+            '<span>账号别名、备注、URL、排序、状态保存在本浏览器的 localStorage；不含任何第三方登录凭据。</span></div></div>';
+    html += '<div class="scroll-box" id="lsInfo">正在读取…</div>';
+    html += '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
+            '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' +
+            '<button class="btn" data-act="export">导出 JSON</button>' +
+            '<button class="btn danger" data-act="reset-all">清空全部账号</button></div>';
+
+    html += '<div class="notice" style="margin-top:14px"><b>能力与边界</b><br />' +
+            '· 本页是<b>账号导航聚合页</b>：点击账号用新标签打开平台后台；<br />' +
+            '· 不保存第三方平台密码，不读取、不上传、不共享第三方 Cookie；<br />' +
+            '· 不绕过平台登录、验证码与风控；<br />' +
+            '· 抖音 / 小红书 / 视频号 / 快手都禁止被 iframe 嵌入，因此「尝试内嵌」大概率只会得到一行提示 —— 这是平台策略，不是本页缺陷；<br />' +
+            '· 需要「一个应用内多账号各带独立登录态、重启后仍保持登录」，请用本项目的 Electron 桌面版。</div>';
+
+    html += '</div>';
+    html += '<div class="modal-foot"><button class="btn primary" data-act="modal-close">完成</button></div>';
+    openModal(html, { wide: true });
+
+    var box = $('lsInfo');
+    if (box) {
+      var bytes = 0;
+      try { bytes = (localStorage.getItem(LS_ACCOUNTS) || '').length; } catch (e) { bytes = 0; }
+      box.innerHTML = '<div>账号条数：<code>' + state.accounts.length + '</code></div>' +
+        '<div>存储键：<code>' + LS_ACCOUNTS + '</code></div>' +
+        '<div>占用体积：<code>' + bytes + ' 字节</code></div>' +
+        '<div>当前地址：<code>' + esc(location.href.split('#')[0]) + '</code></div>';
+    }
+  }
+
+  function resetAll() {
+    confirmModal({
+      title: '清空全部账号',
+      confirmText: '清空',
+      body: '会删除本页保存的全部账号配置（存放在本浏览器 localStorage 中）。<br />' +
+            '不会影响你在各平台浏览器里的登录状态。建议先「导出 JSON」备份。',
+      onConfirm: function () {
+        state.accounts = [];
+        saveAccounts();
+        state.ui.embed = null;
+        closeModal();
+        refreshAll();
+        toast('已清空全部账号', 'ok');
+      }
+    });
+  }
+
+  /* ============================================================
+     事件
+     ============================================================ */
+
+  function onDocumentClick(e) {
+    var el = e.target.closest ? e.target.closest('[data-act]') : null;
+    if (!el) return;
+    var act = el.getAttribute('data-act');
+    var id = el.getAttribute('data-id');
+
+    switch (act) {
+      case 'pick-platform': {
+        var plat = el.getAttribute('data-platform');
+        state.ui.platform = plat;
+        state.settings.lastPlatform = plat;
+        saveSettings();
+        location.hash = 'p=' + plat;
+        if (state.ui.embed) { state.ui.embed = null; if (embedTimer) clearTimeout(embedTimer); }
+        refreshAll();
+        return;
+      }
+      case 'add-account':
+        openAccountModal(null, el.getAttribute('data-platform') || null);
+        return;
+      case 'edit-account':
+        openAccountModal(id, null);
+        return;
+      case 'save-account':
+        submitAccountForm(currentEditId);
+        return;
+      case 'delete-account':
+        removeAccount(id);
+        return;
+      case 'open-account':
+        openInNewTab(id);
+        return;
+      case 'try-embed':
+        startEmbed(id);
+        return;
+      case 'embed-newtab':
+        openInNewTab(id || (state.ui.embed ? state.ui.embed.id : ''));
+        return;
+      case 'embed-reload': {
+        var cur = state.ui.embed;
+        if (!cur) return;
+        startEmbed(cur.id);
+        return;
+      }
+      case 'embed-close':
+        closeEmbed();
+        return;
+      case 'copy-link':
+        copyLink(id || (state.ui.embed ? state.ui.embed.id : ''));
+        return;
+      case 'toggle-extra':
+        // 纯界面展开/收起，不触碰任何数据
+        if (extraOpen[id]) delete extraOpen[id];
+        else extraOpen[id] = true;
+        renderCards();
+        return;
+      case 'move-up':
+        moveOne(id, 'up');
+        return;
+      case 'move-down':
+        moveOne(id, 'down');
+        return;
+      case 'bulk-open':
+        bulkOpen(el.getAttribute('data-filter'));
+        return;
+      case 'quick-seed':
+        quickSeed();
+        return;
+      case 'reset-all':
+        resetAll();
+        return;
+      case 'close-banner':
+        state.settings.bannerClosed = true;
+        saveSettings();
+        renderBanner();
+        return;
+      case 'toggle-banner':
+        state.settings.bannerClosed = !state.settings.bannerClosed;
+        saveSettings();
+        el.classList.toggle('on', !state.settings.bannerClosed);
+        renderBanner();
+        return;
+      case 'toggle-theme': {
+        var order = ['system', 'light', 'dark'];
+        var next = order[(order.indexOf(state.settings.theme) + 1) % 3];
+        state.settings.theme = next;
+        saveSettings();
+        applyTheme();
+        refreshAll();
+        toast('外观：' + (next === 'system' ? '跟随系统' : next === 'light' ? '浅色' : '深色'), 'info');
+        return;
+      }
+      case 'settings':
+        openSettingsModal();
+        return;
+      case 'export':
+        exportAccounts();
+        return;
+      case 'import':
+        $('importFile').click();
+        return;
+      case 'modal-close':
+        closeModal();
+        return;
+      case 'modal-confirm':
+        if (pendingConfirm) { var fn = pendingConfirm; pendingConfirm = null; fn(); }
+        else closeModal();
+        return;
+      default:
+        return;
+    }
+  }
+
+  function onModalSelectChange(e) {
+    var el = e.target;
+    if (el && el.id === 's-theme') {
+      state.settings.theme = el.value;
+      saveSettings();
+      applyTheme();
+      refreshAll();
+    }
+  }
+
+  function onKeydown(e) {
+    if (e.key === 'Escape') {
+      if (state.ui.modalOpen) { closeModal(); return; }
+      if (state.ui.embed) closeEmbed();
+      return;
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      var s = $('searchInput');
+      if (s) s.focus();
+      return;
+    }
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's' && state.ui.modalOpen && $('f-alias')) {
+      e.preventDefault();
+      submitAccountForm(currentEditId);
+    }
+  }
+
+  function onSearchInput(e) {
+    if (e.target && e.target.id === 'searchInput') {
+      state.ui.q = e.target.value;
+      renderHead();
+      renderCards();
+    }
+  }
+
+  function onFileChosen(e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var payload = null;
+      try {
+        payload = JSON.parse(String(reader.result));
+      } catch (err) {
+        toast('文件不是合法的 JSON：' + err.message, 'err');
+        return;
+      }
+      var res = importPayload(payload);
+      if (res.error) { toast(res.error, 'err'); return; }
+      toast('导入完成：新增 ' + res.added + ' · 更新 ' + res.updated + ' · 跳过 ' + res.skipped, 'ok');
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+
+  /* ------------------------------ 拖拽排序 ------------------------------ */
+
+  function onDragStart(e) {
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (!card) return;
+    state.ui.dragId = card.getAttribute('data-id');
+    card.classList.add('dragging');
+    try {
+      e.dataTransfer.setData('text/plain', state.ui.dragId);
+      e.dataTransfer.effectAllowed = 'move';
+    } catch (err) { /* 忽略 */ }
+  }
+
+  function onDragOver(e) {
+    if (!state.ui.dragId) return;
+    var card = e.target.closest ? e.target.closest('.card') : null;
+    if (!card) return;
+    var dragAcc = findAccount(state.ui.dragId);
+    var overAcc = findAccount(card.getAttribute('data-id'));
+    if (!dragAcc || !overAcc || dragAcc.platform !== overAcc.platform) return;
+    e.preventDefault();
+
+    Array.prototype.forEach.call(document.querySelectorAll('.card.drop-before,.card.drop-after'), function (c) {
+      c.classList.remove('drop-before', 'drop-after');
+    });
+    if (overAcc.id === dragAcc.id) return;
+    var r = card.getBoundingClientRect();
+    var after = e.clientY > r.top + r.height / 2;
+    card.classList.add(after ? 'drop-after' : 'drop-before');
+    state.ui.drop = { id: overAcc.id, after: after, platform: overAcc.platform };
+  }
+
+  function onDrop(e) {
+    var dragId = state.ui.dragId;
+    var drop = state.ui.drop;
+    Array.prototype.forEach.call(document.querySelectorAll('.card'), function (c) {
+      c.classList.remove('drop-before', 'drop-after', 'dragging');
+    });
+    state.ui.dragId = null;
+    state.ui.drop = null;
+    if (!dragId || !drop || drop.id === dragId) return;
+    e.preventDefault();
+
+    var ids = accountsOf(drop.platform).map(function (a) { return a.id; });
+    var from = ids.indexOf(dragId);
+    if (from === -1) return;
+    ids.splice(from, 1);
+    var to = ids.indexOf(drop.id);
+    if (to === -1) to = ids.length;
+    if (drop.after) to += 1;
+    ids.splice(to, 0, dragId);
+    reorder(drop.platform, ids);
+  }
+
+  function onDragEnd() {
+    Array.prototype.forEach.call(document.querySelectorAll('.card'), function (c) {
+      c.classList.remove('drop-before', 'drop-after', 'dragging');
+    });
+    state.ui.dragId = null;
+    state.ui.drop = null;
+  }
+
+  /* ============================================================
+     初始化
+     ============================================================ */
+
+  function bindEvents() {
+    document.addEventListener('click', onDocumentClick);
+    document.addEventListener('change', onModalSelectChange);
+    document.addEventListener('keydown', onKeydown);
+    document.addEventListener('input', onSearchInput);
+    document.addEventListener('dragstart', onDragStart);
+    document.addEventListener('dragover', onDragOver);
+    document.addEventListener('drop', onDrop);
+    document.addEventListener('dragend', onDragEnd);
+    $('importFile').addEventListener('change', onFileChosen);
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(prefers-color-scheme: dark)');
+      var onChange = function () { if (state.settings.theme === 'system') { applyTheme(); refreshAll(); } };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+    window.addEventListener('storage', function (ev) {
+      if (ev.key === LS_ACCOUNTS || ev.key === LS_SETTINGS) {
+        loadState();
+        applyTheme();
+        refreshAll();
+      }
+    });
+  }
+
+  function init() {
+    loadState();
+    injectPlatformCSS();
+    applyTheme();
+    bindEvents();
+    refreshAll();
+    if (!state.accounts.length) {
+      toast('还没有账号：点「添加账号」，或先「快速创建 3×4 个账号位」体验', 'info');
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+name: build
+
+# 手动触发，不要求签名 / 公证 / 自动更新。
+# 两个 runner 各打各的包，产物统一传到 Artifacts，不需要 Release。
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: '打包目标'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+          - both
+          - mac
+          - win
+
+permissions:
+  contents: read
+
+jobs:
+  build-mac:
+    if: ${{ github.event.inputs.target == 'both' || github.event.inputs.target == 'mac' }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci || npm install
+
+      - name: 数据层与网页版自检
+        run: |
+          npm run test
+          npm run test:web
+
+      - name: 打包 macOS（dmg · arm64 + x64，不签名）
+        run: npx electron-builder --mac
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: creatorhub-macos
+          path: |
+            release/*.dmg
+            release/*.zip
+          if-no-files-found: warn
+          retention-days: 14
+
+  build-win:
+    if: ${{ github.event.inputs.target == 'both' || github.event.inputs.target == 'win' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: 安装依赖
+        run: npm ci || npm install
+
+      - name: 数据层与网页版自检
+        run: |
+          npm run test
+          npm run test:web
+
+      - name: 打包 Windows（NSIS 安装包 + portable 便携版，不签名）
+        run: npx electron-builder --win
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+
+      - name: 上传产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: creatorhub-windows
+          path: |
+            release/*.exe
+          if-no-files-found: warn
+          retention-days: 14

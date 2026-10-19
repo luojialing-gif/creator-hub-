@@ -1,0 +1,95 @@
+{
+  "name": "creator-hub",
+  "version": "1.1.0",
+  "private": true,
+  "description": "多平台创作者中心聚合工作台（Electron 桌面版）— 抖音 / 小红书 / 视频号 / 快手，多账号独立 session 切换",
+  "main": "src/main.js",
+  "author": "CreatorHub",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "smoke": "CREATORHUB_SMOKE=1 electron .",
+    "build:app": "python3 tools/build_app.py --out ./dist",
+    "install:desktop": "./安装到桌面.command",
+    "test": "node test/store.test.js",
+    "test:guard": "node test/session-guard.test.js",
+    "test:web": "node test/web.smoke.js",
+    "verify:static": "python3 test/static_check.py",
+    "preview": "node test/make_preview.js",
+    "verify": "npm run test && npm run test:guard && npm run test:web && npm run verify:static",
+    "pack:mac": "electron-builder --mac --dir",
+    "pack:win": "electron-builder --win --dir",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:all": "electron-builder --mac --win",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "jsdom": "^25.0.1"
+  },
+  "build": {
+    "productName": "CreatorHub",
+    "appId": "com.creatorhub.desktop",
+    "copyright": "Copyright © 2026 CreatorHub",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "package.json",
+      "!**/*.map",
+      "!**/*.md",
+      "!**/*.DS_Store"
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "electronDownload": {
+      "mirror": "https://npmmirror.com/mirrors/electron/"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.icns",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["arm64", "x64"]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+      "title": "${productName} ${version}",
+      "contents": [
+        { "x": 130, "y": 220, "type": "file" },
+        { "x": 410, "y": 220, "type": "link", "path": "/Applications" }
+      ]
+    },
+    "win": {
+      "icon": "build/icon.ico",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "CreatorHub",
+      "artifactName": "${productName}-Setup-${version}-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
+  }
+}
