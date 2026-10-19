@@ -74,6 +74,7 @@ jobs:
         run: npx electron-builder --win
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 上传产物
         uses: actions/upload-artifact@v4
