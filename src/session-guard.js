@@ -89,7 +89,16 @@ function classifyProbeResult(input) {
   }
 
   const hit = hints.find((h) => h && lower.indexOf(h) !== -1);
-  if (!hit) return { state: 'ok', note: '' };
+  if (!hit) {
+    // URL 没命中登录页特征，再看页面可见文字里有没有「扫码登录」这类掉登录提示。
+    const texts = (input.pageTexts || []).map((t) => String(t).toLowerCase());
+    const pageText = String(input.pageText || '').toLowerCase();
+    const textHit = texts.find((t) => t && pageText.indexOf(t) !== -1);
+    if (textHit) {
+      return { state: 'needs-login', note: '页面内容出现了登录入口（URL 未变，可能是浮层登录），疑似已掉登录' };
+    }
+    return { state: 'ok', note: '' };
+  }
 
   // 入口页本身就是登录页、且没有配置「登录后 URL」时，落在入口页并不代表掉登录。
   const probeLower = probeUrl.toLowerCase();
@@ -256,6 +265,7 @@ function createSessionGuard(deps) {
     const partition = deps.partitionFor(account);
     const url = deps.probeUrlFor(account);
     const hints = deps.loginHintsFor(account) || [];
+    const pageTexts = (typeof deps.loginTextsFor === 'function' && deps.loginTextsFor(account)) || [];
 
     return new Promise((resolve) => {
       let win = null;
@@ -263,7 +273,7 @@ function createSessionGuard(deps) {
       let timer = null;
       let lastUrl = url;
 
-      const finish = (loaded) => {
+      const finish = (loaded, pageText) => {
         if (settled) return;
         settled = true;
         if (timer) clearTimeout(timer);
@@ -273,13 +283,13 @@ function createSessionGuard(deps) {
         } catch (e) {
           /* 忽略 */
         }
-        resolve({ loaded, finalUrl: finalUrl || lastUrl, probeUrl: url, hints });
+        resolve({ loaded, finalUrl: finalUrl || lastUrl, probeUrl: url, hints, pageTexts, pageText: pageText || '' });
       };
 
       try {
         win = deps.makeProbe(partition);
       } catch (e) {
-        resolve({ loaded: 'fail', finalUrl: url, probeUrl: url, hints });
+        resolve({ loaded: 'fail', finalUrl: url, probeUrl: url, hints, pageTexts });
         return;
       }
 
@@ -291,7 +301,31 @@ function createSessionGuard(deps) {
       wc.on('did-navigate-in-page', onNav);
       if (typeof wc.on === 'function') wc.on('did-redirect-navigation', onNav);
 
-      wc.once('did-stop-loading', () => finish('ok'));
+      wc.once('did-stop-loading', () => {
+        // 读一次页面可见文字，用于捕捉「URL 没变但弹了登录浮层」的掉登录。只取文字、不读表单值。
+        // 注意：抖音等 SPA 在「停止加载」后还要再渲染一会儿才出登录浮层，
+        // 所以先立即取一次；若取到近乎空白且没命中，稍候再重试（最多 2 次），避免取早了漏判。
+        const grabText = (attempt) => {
+          if (settled) return;
+          if (!pageTexts.length || !wc || wc.isDestroyed() || typeof wc.executeJavaScript !== 'function') {
+            finish('ok');
+            return;
+          }
+          wc.executeJavaScript(
+            '(function(){try{return document.body?document.body.innerText:\'\';}catch(e){return \'\';}})()'
+          ).then((text) => {
+            const t = String(text || '');
+            const hasHit = pageTexts.some((k) => t.indexOf(k) !== -1);
+            const looksBlank = t.trim().length < 30;
+            if (!hasHit && looksBlank && attempt < 2) {
+              setTimeout(() => grabText(attempt + 1), 2500);
+              return;
+            }
+            finish('ok', t);
+          }).catch(() => finish('ok'));
+        };
+        grabText(0);
+      });
       wc.once('did-fail-load', (_e, code, _desc, _u, isMainFrame) => {
         if (isMainFrame === false) return; // 子资源失败不算
         if (code === -3) return; // ERR_ABORTED：正常跳转
@@ -330,12 +364,23 @@ function createSessionGuard(deps) {
         let health;
         const liveUrl = safe(() => deps.getLiveUrl(acc.id), null);
         if (liveUrl) {
-          // 账号已经开着：直接看它现在的地址，不打扰
+          // 账号已经开着：直接看它现在的地址，不打扰；同时只读地取一次页面文字兜底
+          // （抖音等平台掉登录后 URL 不变、只在页面内弹登录浮层，纯 URL 判断会漏报）。
+          let livePageText = '';
+          if (typeof deps.getLivePageText === 'function') {
+            try {
+              livePageText = (await deps.getLivePageText(acc.id)) || '';
+            } catch (e) {
+              livePageText = '';
+            }
+          }
           const c = classifyProbeResult({
             loaded: 'ok',
             finalUrl: liveUrl,
             probeUrl: deps.probeUrlFor(acc),
-            hints: deps.loginHintsFor(acc) || []
+            hints: deps.loginHintsFor(acc) || [],
+            pageTexts: (typeof deps.loginTextsFor === 'function' && deps.loginTextsFor(acc)) || [],
+            pageText: livePageText
           });
           health = { state: c.state, note: c.note, finalUrl: stripQuery(liveUrl), checkedAt: Date.now(), source: 'live' };
         } else {

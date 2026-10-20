@@ -37,10 +37,11 @@ jobs:
           npm run test
           npm run test:web
 
-      - name: 打包 macOS（dmg · arm64 + x64，不签名）
+      - name: 打包 macOS（zip · arm64 + x64，不签名）
         run: npx electron-builder --mac
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 上传产物
         uses: actions/upload-artifact@v4

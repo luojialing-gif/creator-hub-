@@ -991,6 +991,12 @@ function loginHintsFor(account) {
   return (p && p.loginHints) || [];
 }
 
+/** 页面内容判据（URL 不变但弹登录浮层时用来兜底）。 */
+function loginTextsFor(account) {
+  const p = getPlatform(account.platform);
+  return (p && p.loginTexts) || [];
+}
+
 /**
  * 巡检要加载的地址。
  * 视频号这类「入口页本身就是登录页」的平台，必须优先用自定义的「登录后 URL」，
@@ -1009,6 +1015,7 @@ const sessionGuard = createSessionGuard({
   partitionFor,
   probeUrlFor,
   loginHintsFor,
+  loginTextsFor,
   /** 账号已经开着视图时，直接看它现在的地址，不再重复加载、不打扰用户 */
   getLiveUrl(accountId) {
     const rec = viewPool.get(accountId);
@@ -1019,6 +1026,29 @@ const sessionGuard = createSessionGuard({
     } catch (e) {
       return null;
     }
+  },
+  /** 已打开视图的账号：只读地取一次页面可见文字，供巡检捕捉「URL 不变但弹登录浮层」。取空时稍候重试一次。 */
+  async getLivePageText(accountId) {
+    const rec = viewPool.get(accountId);
+    if (!rec || !rec.view || !rec.view.webContents) return '';
+    const read = async () => {
+      try {
+        const wc = rec.view.webContents;
+        if (wc.isDestroyed() || wc.isLoading()) return '';
+        const text = await wc.executeJavaScript(
+          "(function(){try{return document.body?document.body.innerText:'';}catch(e){return '';}})()",
+          false
+        );
+        return String(text || '');
+      } catch (e) {
+        return '';
+      }
+    };
+    const first = await read();
+    if (first.trim().length >= 30) return first;
+    await new Promise((r) => setTimeout(r, 2000));
+    const second = await read();
+    return second || first;
   },
   makeProbe: makeProbeWindow,
   getSettings: () => state.settings,

@@ -12,6 +12,10 @@
  *                 （用子串而非正则，是为了能安全地随 IPC 传给渲染层。）
  * healthProbe   : 巡检时加载哪种地址，'post' = 该账号自定义的「登录后 URL」，'entry' = 登录入口。
  *                 视频号登录入口本身就是 login.html，必须优先用「登录后 URL」才判得准。
+ * loginTexts    : 页面内容判据（URL 判断的补充）。抖音等平台掉登录后 URL 不变、只在页面内
+ *                 弹出扫码登录浮层，纯靠地址判断会漏报。巡检加载完成后只读地取一次页面可见
+ *                 文字，命中其中任一子串即判「疑似掉登录」。仅做本地字符串比对，不上传内容、
+ *                 不读取表单值、不注入脚本。
  */
 const PLATFORMS = [
   {
@@ -26,7 +30,8 @@ const PLATFORMS = [
     loginHint: '',
     embedBlocked: true,
     healthProbe: 'entry',
-    loginHints: ['sso.douyin.com', '/login', 'passport']
+    loginHints: ['sso.douyin.com', '/login', 'passport'],
+    loginTexts: ['扫码登录', '登录抖音', '验证码登录', '立即登录']
   },
   {
     id: 'xhs',
@@ -40,7 +45,8 @@ const PLATFORMS = [
     loginHint: '',
     embedBlocked: true,
     healthProbe: 'entry',
-    loginHints: ['/login', 'passport', 'sso.']
+    loginHints: ['/login', 'passport', 'sso.'],
+    loginTexts: ['扫码登录', '登录小红书', '验证码登录', '手机号登录']
   },
   {
     id: 'wxch',
@@ -54,7 +60,8 @@ const PLATFORMS = [
     loginHint: '通常需要微信扫码登录；登录成功后会跳转到工作台，建议为该账号填写「登录后 URL」以免每次落到登录页。',
     embedBlocked: true,
     healthProbe: 'post',
-    loginHints: ['login.html', '/login', 'passport', 'sso.']
+    loginHints: ['login.html', '/login', 'passport', 'sso.'],
+    loginTexts: ['扫码登录', '微信扫码', '登录视频号', '登录后使用']
   },
   {
     id: 'kuaishou',
@@ -68,7 +75,8 @@ const PLATFORMS = [
     loginHint: '',
     embedBlocked: true,
     healthProbe: 'entry',
-    loginHints: ['/login', 'passport', 'sso.']
+    loginHints: ['/login', 'passport', 'sso.'],
+    loginTexts: ['扫码登录', '登录快手', '验证码登录', '手机号登录']
   }
 ];
 
