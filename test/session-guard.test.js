@@ -83,13 +83,34 @@ function fakeProbe(finalUrl, counter) {
   const wxch = getPlatform('wxch');
 
   const judgement = (finalUrl, probeUrl, p, loaded) =>
-    classifyProbeResult({ loaded: loaded || 'ok', finalUrl, probeUrl, hints: p.loginHints });
+    classifyProbeResult({ loaded: loaded || 'ok', finalUrl, probeUrl, hints: p.loginHints, pageTexts: p.loginTexts });
 
   ok(judgement('https://creator.douyin.com/creator-micro/home', douyin.entry, douyin).state === 'ok',
     '停在抖音工作台 → 正常');
 
   ok(judgement('https://sso.douyin.com/login/?next=/creator-micro/home', douyin.entry, douyin).state === 'needs-login',
     '被跳到抖音 sso → 需重登');
+
+  // URL 没变、但页面内弹出扫码登录浮层（真实掉登录场景）→ 靠页面文字兜底判出
+  const douyinOverlay = classifyProbeResult({
+    loaded: 'ok',
+    finalUrl: 'https://creator.douyin.com/creator-micro/home',
+    probeUrl: douyin.entry,
+    hints: douyin.loginHints,
+    pageTexts: douyin.loginTexts,
+    pageText: '扫码登录 抖音创作者服务平台 验证码登录 立即登录'
+  });
+  ok(douyinOverlay.state === 'needs-login', 'URL 不变但页面出现「扫码登录」→ 需重登', douyinOverlay.state);
+
+  const douyinNormalText = classifyProbeResult({
+    loaded: 'ok',
+    finalUrl: 'https://creator.douyin.com/creator-micro/home',
+    probeUrl: douyin.entry,
+    hints: douyin.loginHints,
+    pageTexts: douyin.loginTexts,
+    pageText: '作品管理 数据看板 发布视频 我的账号'
+  });
+  ok(douyinNormalText.state === 'ok', 'URL 不变且页面无登录字样 → 正常', douyinNormalText.state);
 
   ok(judgement('https://creator.xiaohongshu.com/login', 'https://creator.xiaohongshu.com/publish/publish', xhs).state === 'needs-login',
     '被跳到小红书登录页 → 需重登');
