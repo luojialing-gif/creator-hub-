@@ -76,11 +76,13 @@ function text(dom, selector) {
      text(dom, '#cards').slice(0, 40));
   ok(text(dom, '#bannerBox').indexOf('纯网页版无法隔离第三方登录态') !== -1,
      '首屏明确告知纯网页无法隔离第三方登录态');
-  ok(d.querySelectorAll('#platformList .side-item').length === 5,
-     '左侧列出「全部 + 4 个平台」', d.querySelectorAll('#platformList .side-item').length);
+  const LP = w.PLATFORMS || [];
+  ok(LP.length >= 4 && d.querySelectorAll('#platformList .side-item').length === LP.length + 1,
+     '左侧列出「全部 + 每个平台」(' + LP.length + ' 个平台)',
+     d.querySelectorAll('#platformList .side-item').length + ' 项');
   const platformNames = Array.from(d.querySelectorAll('#platformList .side-name')).map((e) => e.textContent);
-  ok(['抖音', '小红书', '视频号', '快手'].every((n) => platformNames.indexOf(n) !== -1),
-     '四个平台分组均存在', platformNames.join('/'));
+  ok(LP.every((p) => platformNames.indexOf(p.name) !== -1),
+     '每个平台分组都出现在侧栏', platformNames.join('/'));
 
   /* ---------------- 2. 添加账号 ---------------- */
   click(dom, '[data-act="add-account"]');
@@ -115,17 +117,21 @@ function text(dom, selector) {
   ok(JSON.parse(w.localStorage.getItem('creator-hub-web.accounts.v1')).length === 1, '空别名被校验拦下');
   click(dom, '[data-act="modal-close"]');
 
-  /* ---------------- 3. 快速创建 3×4 ---------------- */
+  /* ---------------- 3. 快速创建（每个可预建平台 3 个） ---------------- */
+  const seedable = LP.filter((p) => !p.requiresEntry && p.entry);
+  const expectTotal = seedable.length * 3; // 每个可预建平台补到 3 个，已存在的那个算在内
   click(dom, '[data-act="settings"]');
   await sleep(30);
   click(dom, '[data-act="quick-seed"]');
   await sleep(30);
   const afterSeed = JSON.parse(w.localStorage.getItem('creator-hub-web.accounts.v1'));
-  ok(afterSeed.length === 12, '快速创建补齐到每平台 3 个（1 个已有 + 11 个新建）', afterSeed.length);
+  ok(afterSeed.length === expectTotal,
+     '快速创建补齐到每平台 3 个（1 个已有 + ' + (expectTotal - 1) + ' 个新建）',
+     afterSeed.length + ' / 期望 ' + expectTotal);
   const perPlatform = {};
   afterSeed.forEach((a) => { perPlatform[a.platform] = (perPlatform[a.platform] || 0) + 1; });
-  ok(Object.keys(perPlatform).length === 4 && Object.values(perPlatform).every((n) => n >= 3),
-     '每个平台都 ≥3 个账号', JSON.stringify(perPlatform));
+  ok(Object.keys(perPlatform).length === seedable.length && Object.values(perPlatform).every((n) => n >= 3),
+     '每个可预建平台都 ≥3 个账号（自定义平台不预建）', JSON.stringify(perPlatform));
 
   /* ---------------- 4. 平台切换 + 搜索 ---------------- */
   click(dom, '[data-act="pick-platform"][data-platform="douyin"]');
@@ -232,7 +238,8 @@ function text(dom, selector) {
   ok(d.querySelectorAll('#cards .card').length === countBefore - 1, '确认后账号被删除',
      d.querySelectorAll('#cards .card').length);
   const afterDelete = JSON.parse(w.localStorage.getItem('creator-hub-web.accounts.v1'));
-  ok(afterDelete.length === 11, '删除同步写入 localStorage', afterDelete.length);
+  ok(afterDelete.length === expectTotal - 1, '删除同步写入 localStorage',
+     afterDelete.length + ' / 期望 ' + (expectTotal - 1));
 
   /* ---------------- 12. 设置弹层 ---------------- */
   click(dom, '[data-act="settings"]');

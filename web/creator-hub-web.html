@@ -343,6 +343,8 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
       loginHint: '自定义平台没有预设入口，请填写完整网址（以 http:// 或 https:// 开头）。',
       note: '自定义平台（入口由使用者填写）' }
   ];
+  // 暴露给自动化测试与调试台读取；平台增减时测试会跟着走，不用再改断言里的数字
+  window.PLATFORMS = PLATFORMS;
 
   var STATUSES = ['normal', 'pending', 'loggedout', 'disabled'];
   var STATUS_LABEL = { normal: '正常', pending: '待发布', loggedout: '未登录', disabled: '停用' };

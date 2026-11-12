@@ -32,3 +32,6 @@ Partitions/
 dist-downloads/
 交付-全媒体登录平台/
 output/
+
+# Electron 自检在路径解析失败时会写出这个文件（含真实账号数据），不入库
+null
