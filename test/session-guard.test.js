@@ -15,6 +15,10 @@ const { createSessionGuard, classifyProbeResult, stripQuery } = require(path.joi
 const { PLATFORMS, getPlatform } = require(path.join(__dirname, '..', 'src', 'shared', 'platforms.js'));
 const store = require(path.join(__dirname, '..', 'src', 'store.js'));
 
+// 下面的用例会走到 store 的写入路径；初始化到临时目录，避免在仓库里落盘（或者更糟，写出一个名为 null 的文件）。
+const os = require('os');
+store.init(fs.mkdtempSync(path.join(os.tmpdir(), 'creatorhub-guard-')));
+
 let pass = 0;
 let fail = 0;
 function ok(cond, name, detail) {

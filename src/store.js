@@ -261,6 +261,9 @@ function load() {
 }
 
 function save(state) {
+  // 没初始化就落盘会把 file 拼成字符串 "null"，在当前目录留下一个名为 null 的文件。
+  // 这里直接报错，让调用方（尤其是测试）显式 init，而不是悄悄写脏文件。
+  if (!statePath) throw new Error('store 未初始化：请先调用 init(数据目录) 再保存');
   // 每次保存前留一份上一版备份，作为数据文件损坏时的兜底
   try {
     if (fs.existsSync(statePath)) fs.copyFileSync(statePath, backupPath);
