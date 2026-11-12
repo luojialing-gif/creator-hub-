@@ -1,0 +1,52 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    三条路都走不通，卡在同一件事
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flexDirection: 'row', marginTop: 32, height: 390 }}>
+    <Box style={{ flex: 1, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 14, color: '#6B7A66', letterSpacing: 3 }}>试过的办法</Text>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 118, borderBottom: '1px solid #D9E6D0', marginTop: 12 }}>
+        <Text style={{ fontSize: 20, color: '#A9C19D', width: 44 }}>01</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2F3A2C' }}>浏览器多标签</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 118, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 20, color: '#A9C19D', width: 44 }}>02</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2F3A2C' }}>多浏览器 / 多用户</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 118, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 20, color: '#A9C19D', width: 44 }}>03</Text>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2F3A2C' }}>网页聚合页</Text>
+      </Box>
+    </Box>
+
+    <Box style={{ width: 1, background: '#D9E6D0', marginLeft: 40, marginRight: 40 }} />
+
+    <Box style={{ flex: 1, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 14, color: '#6B7A66', letterSpacing: 3 }}>为什么不行</Text>
+      <Box style={{ height: 118, justifyContent: 'center', borderBottom: '1px solid #D9E6D0', marginTop: 12 }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C', lineHeight: 1.5 }}>同平台只能登一个号，登第二个，第一个被顶掉</Text>
+      </Box>
+      <Box style={{ height: 118, justifyContent: 'center', borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C', lineHeight: 1.5 }}>每次换窗口重新找位置，而且不会告诉你哪个号掉了</Text>
+      </Box>
+      <Box style={{ height: 118, justifyContent: 'center', borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C', lineHeight: 1.5 }}>四个平台的后台都禁止被别的网页嵌入</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ marginTop: 24, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 22 }}>
+    <Text style={{ fontSize: 20, color: '#2F3A2C', lineHeight: 1.5 }}>
+      三条路卡的都是同一件事：<span style={{ fontWeight: 'bold', color: '#5E7A56' }}>隔离</span> 和 <span style={{ fontWeight: 'bold', color: '#5E7A56' }}>提醒</span>，浏览器本身不提供
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>04</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

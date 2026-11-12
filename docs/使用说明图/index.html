@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>全媒体登录平台 · 使用说明</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: #EDEFE9; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: #2F3A2C;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  .page {
+    width: 1240px;
+    padding: 52px 56px 40px;
+    background: #F6F7F4;
+    position: relative;
+  }
+
+  /* ---------------- 头部 ---------------- */
+  .hd { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 26px; border-bottom: 2px solid #2F3A2C; }
+  .kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; letter-spacing: 2px; color: #5E7A56; font-weight: 600; margin-bottom: 14px; }
+  .kdot { width: 7px; height: 7px; background: #C2703D; border-radius: 50%; display: inline-block; }
+  h1 { font-size: 58px; line-height: 1.06; letter-spacing: -1.5px; font-weight: 700; }
+  .sub { font-size: 19px; color: #5A6653; margin-top: 14px; letter-spacing: 0.2px; }
+  .hd-right { text-align: right; padding-bottom: 6px; }
+  .chips { display: flex; gap: 7px; justify-content: flex-end; }
+  .chip { font-size: 12.5px; padding: 6px 11px; border-radius: 20px; background: #fff; border: 1px solid #DFE4D9; color: #46523F; font-weight: 500; }
+  .chip i { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: 1px; }
+  .hd-meta { font-size: 12.5px; color: #8A957F; margin-top: 12px; letter-spacing: 0.4px; }
+
+  /* ---------------- 章节标题 ---------------- */
+  .sec { margin-top: 40px; }
+  .sec-h { display: flex; align-items: center; gap: 13px; margin-bottom: 20px; }
+  .num { font-size: 12px; font-weight: 700; color: #fff; background: #5E7A56; width: 30px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; letter-spacing: 0.5px; }
+  .sec-h h2 { font-size: 23px; font-weight: 700; letter-spacing: -0.3px; }
+  .rule { flex: 1; height: 1px; background: #DDE3D6; }
+  .hint { font-size: 13px; color: #8A957F; }
+
+  /* ---------------- 界面示意 ---------------- */
+  .ui { background: #fff; border: 1px solid #E1E6DA; border-radius: 16px; padding: 16px 16px 24px; box-shadow: 0 2px 0 rgba(47,58,44,.03); }
+  .ui-top { display: flex; align-items: center; gap: 16px; padding: 2px 4px 14px; border-bottom: 1px solid #EDF0E8; }
+  .ui-brand { display: flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; }
+  .ui-brand .mark { width: 26px; height: 26px; border-radius: 7px; background: #5E7A56; color: #fff; font-size: 13px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .ui-searchwrap { flex: 1; display: flex; justify-content: center; }
+  .ui-search { width: 300px; height: 28px; border-radius: 7px; background: #F3F5F0; border: 1px solid #E4E9DD; color: #9AA491; font-size: 11.5px; display: flex; align-items: center; padding: 0 11px; gap: 7px; }
+  .ui-btns { display: flex; align-items: center; gap: 7px; }
+  .b { height: 27px; padding: 0 12px; border-radius: 7px; border: 1px solid #E4E9DD; background: #fff; font-size: 11.5px; color: #4C5745; display: flex; align-items: center; font-weight: 500; }
+  .b.primary { background: #5E7A56; border-color: #5E7A56; color: #fff; }
+  .b.sq { width: 27px; padding: 0; justify-content: center; color: #7C8775; }
+
+  .ui-body { display: flex; gap: 16px; padding-top: 14px; }
+  .ui-side { width: 186px; flex-shrink: 0; border-right: 1px solid #EDF0E8; padding-right: 14px; }
+  .ui-side-t { font-size: 10.5px; color: #A0AA97; letter-spacing: 1.2px; margin-bottom: 10px; }
+  .srow { display: flex; align-items: center; justify-content: space-between; height: 30px; padding: 0 9px; border-radius: 6px; font-size: 12px; color: #5A6653; margin-bottom: 2px; }
+  .srow.on { background: #EAF1E4; color: #33422C; font-weight: 600; }
+  .srow i { width: 7px; height: 7px; border-radius: 2px; display: inline-block; margin-right: 8px; vertical-align: 0; }
+  .srow b { font-size: 10.5px; font-weight: 600; color: #96A08D; }
+
+  .ui-main { flex: 1; min-width: 0; }
+  .ui-head { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
+  .ui-head .t { font-size: 14px; font-weight: 700; }
+  .ui-head .muted { font-size: 11.5px; color: #A0AA97; }
+  .ui-head .spacer { flex: 1; }
+  .tag { font-size: 10.5px; padding: 3px 8px; border-radius: 20px; background: #F3F5F0; color: #6E7A66; border: 1px solid #E8ECE2; }
+  .tag.warn { background: #FBEEE4; border-color: #F0D6C2; color: #B0623A; font-weight: 600; }
+
+  .ucards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .ucard { border: 1px solid #E7EBE0; border-radius: 10px; padding: 11px 12px 10px; background: #fff; position: relative; }
+  .ucard .r1 { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .ucard .pf { width: 15px; height: 15px; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 8px; font-weight: 700; }
+  .ucard .alias { font-size: 12px; font-weight: 700; }
+  .ucard .pill { font-size: 9px; padding: 2px 6px; border-radius: 4px; margin-left: auto; }
+  .pill.ok { background: #E9F2E2; color: #4A6A40; }
+  .pill.warn { background: #FBEEE4; color: #B0623A; }
+  .ucard .note { font-size: 10px; color: #96A08D; margin-bottom: 6px; }
+  .ucard .hl { display: flex; align-items: center; gap: 5px; font-size: 10px; color: #6E7A66; margin-bottom: 8px; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: #5E7A56; }
+  .dot.warn { background: #C2703D; }
+  .ucard .act { height: 24px; border-radius: 6px; background: #5E7A56; color: #fff; font-size: 10.5px; display: flex; align-items: center; justify-content: center; font-weight: 600; letter-spacing: 0.5px; }
+
+  /* 标注气泡 */
+  .pin-host { position: relative; }
+  .pin { position: absolute; width: 19px; height: 19px; border-radius: 50%; background: #C2703D; color: #fff; font-size: 10.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; box-shadow: 0 1px 3px rgba(0,0,0,.12); z-index: 3; }
+  .pin.tr { top: -9px; right: -9px; }
+  .pin.tl { top: -9px; left: -11px; }
+  .pin.br { bottom: -9px; right: -9px; }
+
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 11px 40px; margin-top: 18px; }
+  .lg { display: flex; gap: 10px; font-size: 13px; line-height: 1.5; }
+  .lg b { color: #C2703D; font-size: 12px; font-weight: 700; flex-shrink: 0; width: 14px; }
+  .lg span { color: #5A6653; }
+  .legend-note { margin-top: 14px; font-size: 12.5px; line-height: 1.7; color: #7C8775; padding-left: 24px; border-left: 2px solid #DDE3D6; }
+
+  /* ---------------- 步骤 ---------------- */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 13px; }
+  .step { background: #fff; border: 1px solid #E1E6DA; border-radius: 12px; padding: 16px 15px 15px; position: relative; }
+  .step::before { content: ""; position: absolute; top: 0; left: 15px; right: 15px; height: 3px; background: #5E7A56; border-radius: 0 0 3px 3px; }
+  .step .sn { font-size: 24px; font-weight: 700; color: #C8D5BE; letter-spacing: -0.5px; line-height: 1; margin-bottom: 9px; }
+  .step h3 { font-size: 14.5px; font-weight: 700; margin-bottom: 7px; letter-spacing: -0.2px; }
+  .step p { font-size: 11.5px; line-height: 1.62; color: #6E7A66; }
+  .step p em { font-style: normal; color: #B0623A; font-weight: 600; }
+
+  /* ---------------- 徽标 ---------------- */
+  .health { display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+  .hc { background: #fff; border: 1px solid #E1E6DA; border-radius: 12px; padding: 15px 14px; }
+  .hc .row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+  .hc .bd { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .hc .bd.g { background: #5E7A56; box-shadow: 0 0 0 3px #E9F2E2; }
+  .hc .bd.o { background: #C2703D; box-shadow: 0 0 0 3px #FBEEE4; }
+  .hc .bd.n { background: #fff; border: 2px solid #C3CBB9; box-shadow: 0 0 0 3px #F1F3ED; }
+  .hc .bd.dash { border-style: dashed; border-color: #B3BDAA; }
+  .hc .name { font-size: 13px; font-weight: 700; letter-spacing: -0.2px; }
+  .hc p { font-size: 11.5px; line-height: 1.6; color: #6E7A66; }
+  .hc p b { color: #2F3A2C; font-weight: 600; }
+
+  /* ---------------- 保活 ---------------- */
+  .guard { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+  .gd { background: #fff; border: 1px solid #E1E6DA; border-radius: 12px; padding: 16px 15px; display: flex; flex-direction: column; }
+  .gd .top { display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px; }
+  .gd .top b { font-size: 13.5px; letter-spacing: -0.2px; line-height: 1.35; }
+  .gd .top span { font-size: 10px; color: #fff; background: #5E7A56; padding: 2px 7px; border-radius: 4px; flex-shrink: 0; align-self: flex-start; margin-top: 1px; }
+  .gd p { font-size: 11.5px; line-height: 1.65; color: #6E7A66; }
+  .gd .val { margin-top: 10px; font-size: 11px; color: #B0623A; font-weight: 600; }
+  .notice { margin-top: 13px; background: #F1F5EC; border: 1px solid #DCE6D3; border-radius: 10px; padding: 13px 16px; font-size: 12px; line-height: 1.65; color: #5A6653; display: flex; gap: 10px; }
+  .notice b { color: #2F3A2C; flex-shrink: 0; }
+  .notice .txt b { color: #B0623A; }
+
+  /* ---------------- 数据与边界 ---------------- */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+  .panel { background: #fff; border: 1px solid #E1E6DA; border-radius: 12px; padding: 16px 17px; }
+  .panel h4 { font-size: 13px; font-weight: 700; margin-bottom: 11px; display: flex; align-items: center; gap: 7px; }
+  .panel h4 i { width: 3px; height: 13px; background: #5E7A56; border-radius: 2px; display: inline-block; }
+  .panel h4.no i { background: #C2703D; }
+  .prow { display: flex; gap: 9px; font-size: 11.5px; line-height: 1.6; color: #5A6653; margin-bottom: 9px; }
+  .prow:last-child { margin-bottom: 0; }
+  .prow .k { flex-shrink: 0; width: 62px; color: #96A08D; font-size: 10.5px; padding-top: 1px; }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 10.5px; background: #F3F5F0; padding: 1.5px 5px; border-radius: 3px; color: #46523F; }
+  .prow .x { color: #C2703D; font-weight: 700; flex-shrink: 0; }
+  .prow2 { margin-bottom: 13px; }
+  .prow2:last-child { margin-bottom: 0; }
+  .pk { font-size: 10.5px; color: #96A08D; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .pv { margin-bottom: 4px; }
+  .pv code { font-size: 10.5px; }
+  .pd { font-size: 11px; color: #6E7A66; line-height: 1.6; }
+
+  /* ---------------- 页脚 ---------------- */
+  .foot { margin-top: 34px; background: #2F3A2C; border-radius: 12px; padding: 17px 22px; display: flex; align-items: center; justify-content: space-between; }
+  .keys { display: flex; gap: 20px; }
+  .key { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: #C9D3C0; }
+  .key kbd { font-family: inherit; font-size: 11px; background: rgba(255,255,255,.12); color: #fff; border-radius: 4px; padding: 3px 7px; letter-spacing: 0.2px; }
+  .foot .rt { font-size: 11.5px; color: #8E9C86; letter-spacing: 0.3px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ================= 头部 ================= -->
+  <div class="hd">
+    <div>
+      <div class="kicker"><span class="kdot"></span>使用说明 · 一页看完</div>
+      <h1>全媒体登录平台</h1>
+      <div class="sub">一个窗口，四个平台，每个账号一套独立的登录态</div>
+    </div>
+    <div class="hd-right">
+      <div class="chips">
+        <span class="chip"><i style="background:#111"></i>抖音</span>
+        <span class="chip"><i style="background:#F2403C"></i>小红书</span>
+        <span class="chip"><i style="background:#1FA84A"></i>视频号</span>
+        <span class="chip"><i style="background:#FF7A1A"></i>快手</span>
+      </div>
+      <div class="hd-meta">macOS / Windows 本地运行 · 工具本身不用注册账号</div>
+    </div>
+  </div>
+
+  <!-- ================= 01 界面一览 ================= -->
+  <div class="sec">
+    <div class="sec-h">
+      <span class="num">01</span><h2>界面一览</h2><span class="rule"></span>
+      <span class="hint">四个位置就够了，其余不用管</span>
+    </div>
+
+    <div class="ui">
+      <div class="ui-top">
+        <div class="ui-brand"><span class="mark">全</span><span>全媒体登录平台</span></div>
+        <div class="ui-searchwrap">
+          <div class="ui-search pin-host">⌕&nbsp;&nbsp;搜索账号 / 备注 / 平台（⌘K）<div class="pin tr">1</div></div>
+        </div>
+        <div class="ui-btns">
+          <div class="pin-host"><span class="b primary">＋ 添加账号</span><div class="pin tr">2</div></div>
+          <span class="b">导入</span><span class="b">导出</span><span class="b sq">☾</span><span class="b sq">⚙</span>
+        </div>
+      </div>
+
+      <div class="ui-body">
+        <div class="ui-side">
+          <div class="ui-side-t">平台</div>
+          <div class="srow on pin-host">全部账号 <b>12</b><div class="pin tl">3</div></div>
+          <div class="srow"><span><i style="background:#111"></i>抖音</span><b>3</b></div>
+          <div class="srow"><span><i style="background:#F2403C"></i>小红书</span><b>3</b></div>
+          <div class="srow"><span><i style="background:#1FA84A"></i>视频号</span><b>3</b></div>
+          <div class="srow"><span><i style="background:#FF7A1A"></i>快手</span><b>3</b></div>
+        </div>
+
+        <div class="ui-main">
+          <div class="ui-head">
+            <span class="t">全部账号</span><span class="muted">12 个账号</span>
+            <span class="tag">正常 8 · 待发布 2 · 未登录 2</span>
+            <span class="tag warn">登录态：正常 10 · 需重登 2</span>
+            <span class="spacer"></span>
+            <div class="pin-host"><span class="b">巡检登录态</span><div class="pin tr">4</div></div>
+            <span class="b">一键打开…</span>
+          </div>
+          <div class="ucards">
+            <div class="ucard">
+              <div class="r1"><span class="pf" style="background:#111">抖</span><span class="alias">抖音 · 主号</span><span class="pill ok">正常</span></div>
+              <div class="note">日更 1 条，重点看发布后的 2 小时数据</div>
+              <div class="hl"><span class="dot"></span>登录态正常 · 检测于 12 分钟前</div>
+              <div class="act">打开工作台</div>
+            </div>
+            <div class="ucard">
+              <div class="r1"><span class="pf" style="background:#F2403C">红</span><span class="alias">小红书 · 种草号</span><span class="pill warn">待发布</span></div>
+              <div class="note">矩阵号，搬运与二次剪辑，排期</div>
+              <div class="hl"><span class="dot warn"></span>疑似需要重新登录 · 检测于 1 小时前</div>
+              <div class="act">打开工作台</div>
+            </div>
+            <div class="ucard">
+              <div class="r1"><span class="pf" style="background:#1FA84A">视</span><span class="alias">视频号 · 情感号</span><span class="pill ok">正常</span></div>
+              <div class="note">长尾内容，一周 2 条</div>
+              <div class="hl"><span class="dot"></span>登录态正常 · 检测于 12 分钟前</div>
+              <div class="act">打开工作台</div>
+            </div>
+            <div class="ucard">
+              <div class="r1"><span class="pf" style="background:#FF7A1A">快</span><span class="alias">快手 · 带货号</span><span class="pill ok">正常</span></div>
+              <div class="note">新起的测试号，暂未开始运营</div>
+              <div class="hl"><span class="dot"></span>登录态正常 · 检测于 12 分钟前</div>
+              <div class="act">打开工作台</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="lg"><b>1</b><span>搜索框：按别名 / 备注 / 平台过滤，⌘K 直接聚焦</span></div>
+      <div class="lg"><b>2</b><span>添加账号：选平台、起别名、写备注，几秒钟一个</span></div>
+      <div class="lg"><b>3</b><span>左栏切平台：点某个平台只看该平台下的号</span></div>
+      <div class="lg"><b>4</b><span>巡检登录态：立刻把所有号静默查一遍，结果落在每张卡片上</span></div>
+    </div>
+    <div class="legend-note">
+      卡片上那行「登录态」就是这个号现在还能不能直接用；点「打开工作台」，就是以它自己的身份进后台。「一键打开…」可以按状态批量弹窗：仅未登录、仅待发布、仅巡检出的待重登。
+    </div>
+  </div>
+
+  <!-- ================= 02 五步上手 ================= -->
+  <div class="sec">
+    <div class="sec-h">
+      <span class="num">02</span><h2>第一次用，五步</h2><span class="rule"></span>
+      <span class="hint">装好之后，按这个顺序走一遍</span>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="sn">01</div>
+        <h3>打开应用</h3>
+        <p>双击 CreatorHub。若提示「无法打开」，到<b>系统设置 → 隐私与安全性</b>点「仍要打开」，只需一次。</p>
+      </div>
+      <div class="step">
+        <div class="sn">02</div>
+        <h3>占好位置</h3>
+        <p>点<b>添加账号</b>，选平台、起别名（如「抖音 · 主号」）、写备注。有几个号就建几张卡。</p>
+      </div>
+      <div class="step">
+        <div class="sn">03</div>
+        <h3>逐个登录</h3>
+        <p>点<b>打开工作台</b>，在界面里扫码登录。每个号只登一次，之后它记住的是这个号自己。</p>
+      </div>
+      <div class="step">
+        <div class="sn">04</div>
+        <h3>日常直接点</h3>
+        <p>以后从列表点进去就用，不再扫码。发布、看数据、回评论都在同一个窗口里。</p>
+      </div>
+      <div class="step">
+        <div class="sn">05</div>
+        <h3>掉了只重开那几个</h3>
+        <p>看到橙色徽标，点<b>一键打开…</b> → <b>仅巡检出的待重登</b>，只弹需要重登的号，其余不受影响。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 03 徽标 ================= -->
+  <div class="sec">
+    <div class="sec-h">
+      <span class="num">03</span><h2>看懂四个徽标</h2><span class="rule"></span>
+      <span class="hint">只有橙色需要动手</span>
+    </div>
+    <div class="health">
+      <div class="hc">
+        <div class="row"><span class="bd g"></span><span class="name">登录态正常</span></div>
+        <p>刚检查过，还能直接进后台。<b>什么都不用做。</b></p>
+      </div>
+      <div class="hc">
+        <div class="row"><span class="bd o"></span><span class="name">疑似需要重新登录</span></div>
+        <p>被平台跳回了登录页。<b>点「打开工作台」重扫一次</b>即可，不影响其它号。</p>
+      </div>
+      <div class="hc">
+        <div class="row"><span class="bd n"></span><span class="name">登录态未能确认</span></div>
+        <p>这次没判断出来（网络或页面没加载完）。<b>不等于掉了</b>，下一轮会重试。</p>
+      </div>
+      <div class="hc">
+        <div class="row"><span class="bd n dash"></span><span class="name">登录态未检测</span></div>
+        <p>这个号还没跑过检查。点顶部<b>巡检登录态</b>立刻测一遍。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 04 保活 ================= -->
+  <div class="sec">
+    <div class="sec-h">
+      <span class="num">04</span><h2>它替你守登录态的三个开关</h2><span class="rule"></span>
+      <span class="hint">设置里默认已开，不用改</span>
+    </div>
+    <div class="guard">
+      <div class="gd">
+        <div class="top"><b>会话型凭据<br>转为可落盘</b><span>推荐开</span></div>
+        <p>不少平台的登录凭据是「关掉就失效」的临时 Cookie。这个开关让它能被写进磁盘，重启应用不用再扫。</p>
+        <div class="val">解决：重启就要重登</div>
+      </div>
+      <div class="gd">
+        <div class="top"><b>退出前等待<br>凭据写入磁盘</b><span>推荐开</span></div>
+        <p>强制退出或崩溃会丢掉最后一段写盘。开启后退出时最多等 2.5 秒写完，代价是关得稍慢。</p>
+        <div class="val">解决：关掉再开就掉线</div>
+      </div>
+      <div class="gd">
+        <div class="top"><b>定时保活<br>+ 登录态巡检</b><span>间隔可调</span></div>
+        <p>按间隔静默访问每个号一次：平台顺带续期会话，同时查出有没有被踢回登录页。串行执行，不会同时冲平台。</p>
+        <div class="val">建议：4~6 小时，别短于 2 小时</div>
+      </div>
+    </div>
+    <div class="notice">
+      <b>说明</b>
+      <div class="txt">能保多久最终由平台决定 —— 平台主动过期、在别处登录顶号、风控要求重新验证，本工具都拦不住。它只做两件事：<b>尽量把本机凭据留住</b>，<b>掉了第一时间在卡片上告诉你</b>。正常使用下以「周」为单位保持是常见情况。</div>
+    </div>
+  </div>
+
+  <!-- ================= 05 数据与边界 ================= -->
+  <div class="sec">
+    <div class="sec-h">
+      <span class="num">05</span><h2>数据在哪，以及它不做什么</h2><span class="rule"></span>
+      <span class="hint">不做自动发布，也不碰密码</span>
+    </div>
+    <div class="two">
+      <div class="panel">
+        <h4><i></i>全部数据只在本机</h4>
+        <div class="prow2">
+          <div class="pk">账号配置</div>
+          <div class="pv"><code>~/Library/Application Support/CreatorHub/accounts.json</code></div>
+          <div class="pd">每次保存前自动留一份备份，主文件损坏时自动恢复。<br>Windows 在 <code>%APPDATA%\CreatorHub</code>，结构相同。</div>
+        </div>
+        <div class="prow2">
+          <div class="pk">各账号登录态</div>
+          <div class="pv"><code>…/CreatorHub/Partitions/douyin-account-1</code></div>
+          <div class="pd">一个号一个分区，互相看不到、也不会顶号；导出配置时不含任何凭据。</div>
+        </div>
+      </div>
+      <div class="panel">
+        <h4 class="no"><i></i>明确不做的四件事</h4>
+        <div class="prow"><span class="x">×</span><span>不保存任何平台的账号密码</span></div>
+        <div class="prow"><span class="x">×</span><span>不读取、不上传、不导出 Cookie</span></div>
+        <div class="prow"><span class="x">×</span><span>不绕过登录、验证码与风控，不做自动登录</span></div>
+        <div class="prow"><span class="x">×</span><span>不代替你发布、剪辑或修改平台的任何内容</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 页脚 ================= -->
+  <div class="foot">
+    <div class="keys">
+      <span class="key"><kbd>⌘ K</kbd>搜索</span>
+      <span class="key"><kbd>⌘ R</kbd>刷新当前后台</span>
+      <span class="key"><kbd>⌘ ⇧ L</kbd>返回账号列表</span>
+      <span class="key"><kbd>Esc</kbd>关闭弹层</span>
+    </div>
+    <div class="rt">抖音 · 小红书 · 视频号 · 快手　|　点卡片上的「技术详情」可看分区与落盘情况</div>
+  </div>
+
+</div>
+</body>
+</html>

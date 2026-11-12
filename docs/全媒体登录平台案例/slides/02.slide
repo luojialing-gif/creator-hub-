@@ -1,0 +1,45 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    当你负责 2 个及以上账号时：账号的增加等于浏览器的增加
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flexDirection: 'row', marginTop: 32, height: 492 }}>
+    <Box style={{ width: 300, background: '#5E7A56', borderRadius: 16, padding: 32, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Text style={{ fontSize: 20, color: '#CFE0C3', letterSpacing: 2 }}>固定开销</Text>
+      <Box style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1 }}>14</Text>
+        <Text style={{ fontSize: 20, color: '#CFE0C3', marginLeft: 8, marginBottom: 8 }}>分钟</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#CFE0C3', lineHeight: 1.5 }}>
+        一轮开工的固定开销，<br />还没算写稿和剪辑
+      </Text>
+    </Box>
+
+    <Box style={{ flex: 1, marginLeft: 32, flexDirection: 'column' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 123, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C' }}>打开五个平台后台</Text>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#5E7A56' }}>4 min</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 123, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C' }}>三个号重新扫码验证</Text>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#5E7A56' }}>3 min</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 123, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C' }}>翻书签找发布入口</Text>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#5E7A56' }}>2 min</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 123, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, color: '#2F3A2C' }}>发布前发现主号掉登录</Text>
+        <Text style={{ fontSize: 28, fontWeight: 'bold', color: '#C2703D' }}>5 min</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>02</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

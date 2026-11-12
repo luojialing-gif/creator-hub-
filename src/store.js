@@ -117,11 +117,16 @@ function normalizeAccount(input, existing, accounts) {
   const alias = cleanString(src.alias, 60) || base.alias;
   if (!alias) return { error: '账号别名不能为空' };
 
-  let entryUrl = base.url || (getPlatform(platform) || {}).entry || '';
+  const platformMeta = getPlatform(platform) || {};
+  let entryUrl = base.url || platformMeta.entry || '';
   if (src.url !== undefined) {
     const cleaned = cleanUrl(src.url);
     if (cleaned === null) return { error: '登录入口 URL 必须以 http:// 或 https:// 开头' };
-    entryUrl = cleaned || entryUrl;
+    // 预设平台允许「清空 = 不改」，沿用旧值；没有预设入口的平台则允许显式清空后再校验。
+    entryUrl = cleaned || (platformMeta.requiresEntry ? '' : entryUrl);
+  }
+  if (platformMeta.requiresEntry && !entryUrl) {
+    return { error: '这个平台没有预设入口，请填写登录入口 URL' };
   }
 
   let postLoginUrl = base.postLoginUrl || '';

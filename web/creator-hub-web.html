@@ -247,7 +247,7 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     <div class="brand-mark">全</div>
     <div>
       <div class="brand-text">全媒体登录平台<span class="brand-sub" style="font-weight:400"> · Web 版</span></div>
-      <div class="brand-sub">抖音 · 小红书 · 视频号 · 快手</div>
+      <div class="brand-sub">多平台 · 多账号 · 独立登录态</div>
     </div>
   </div>
 
@@ -321,15 +321,27 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     { id: 'douyin', name: '抖音', abbr: '抖', color: '#20232E', colorDark: '#9AA3B8',
       entry: 'https://creator.douyin.com/creator-micro/home',
       note: '抖音创作者中心' },
+    { id: 'xingtu', name: '星图', abbr: '星', color: '#3D46C8', colorDark: '#8A93F5',
+      entry: 'https://www.xingtu.cn/?redirect_uri=https://www.xingtu.cn/sup/creator/user/overview',
+      note: '抖音星图（创作者商业合作平台）' },
     { id: 'xhs', name: '小红书', abbr: '书', color: '#FF2442', colorDark: '#FF5C70',
       entry: 'https://creator.xiaohongshu.com/publish/publish?source=&published=true',
       note: '小红书创作服务平台' },
+    { id: 'pgy', name: '蒲公英', abbr: '蒲', color: '#C9425A', colorDark: '#E86B80',
+      entry: 'https://pgy.xiaohongshu.com',
+      note: '小红书蒲公英（创作者商业合作平台）' },
     { id: 'wxch', name: '视频号', abbr: '视', color: '#07C160', colorDark: '#2FD07F',
       entry: 'https://channels.weixin.qq.com/login.html',
       note: '微信视频号助手（通常需扫码登录）' },
     { id: 'kuaishou', name: '快手', abbr: '快', color: '#FF6A00', colorDark: '#FF8A3D',
       entry: 'https://cp.kuaishou.com/article/manage/video?status=1&from=publish',
-      note: '快手创作服务平台' }
+      note: '快手创作服务平台' },
+    // 没有预设入口：新增账号时必须由使用者填写自己的登录入口地址
+    { id: 'custom', name: '自定义', abbr: '自', color: '#6B7280', colorDark: '#9AA3AF',
+      entry: '',
+      requiresEntry: true,
+      loginHint: '自定义平台没有预设入口，请填写完整网址（以 http:// 或 https:// 开头）。',
+      note: '自定义平台（入口由使用者填写）' }
   ];
 
   var STATUSES = ['normal', 'pending', 'loggedout', 'disabled'];
@@ -450,11 +462,15 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     var alias = String(src.alias != null ? src.alias : base.alias || '').replace(/\s+/g, ' ').trim().slice(0, 60);
     if (!alias) return { error: '账号别名不能为空' };
 
-    var url = base.url || platformOf(platform).entry;
+    var meta = platformOf(platform) || {};
+    var url = base.url || meta.entry || '';
     if (src.url !== undefined) {
       var cu = cleanUrl(src.url);
       if (cu === null) return { error: 'URL 必须以 http:// 或 https:// 开头' };
-      url = cu || url;
+      url = cu || (meta.requiresEntry ? '' : url);
+    }
+    if (meta.requiresEntry && !url) {
+      return { error: '这个平台没有预设入口，请填写登录入口 URL' };
     }
 
     var status = STATUSES.indexOf(src.status) !== -1 ? src.status : (base.status || 'normal');
@@ -783,7 +799,7 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
               : '可以为该平台添加多个账号，点击卡片即用新标签打开对应后台。') + '</p>' +
         '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">' +
         '<button class="btn primary" data-act="add-account"' + (state.ui.platform === 'all' ? '' : ' data-platform="' + state.ui.platform + '"') + '>添加账号</button>' +
-        (noAccountAtAll ? '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' : '') +
+        (noAccountAtAll ? '<button class="btn" data-act="quick-seed">快速创建一批账号位（每个平台 3 个）</button>' : '') +
         '</div></div>';
       return;
     }
@@ -964,6 +980,7 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
   function quickSeed() {
     var created = 0;
     PLATFORMS.forEach(function (p) {
+      if (p.requiresEntry || !p.entry) return; // 自定义平台没有预设入口，不预建
       var n = state.accounts.filter(function (a) { return a.platform === p.id; }).length;
       for (var i = n + 1; i <= 3; i += 1) {
         var r = normalizeAccount({
@@ -1071,8 +1088,13 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
             }).join('') + '</select></div>' +
             '<div class="field"><label>排序权重</label><input id="f-sort" type="text" value="' +
             esc(acc ? acc.sort : '') + '" placeholder="越小越靠前，留空自动" /></div></div>';
-    html += '<div class="field"><label>登录入口 URL</label><input id="f-url" type="text" spellcheck="false" value="' +
-            esc(acc ? acc.url : p.entry) + '" /><div class="hint">点击「打开工作台」时新标签访问这个地址。</div></div>';
+    html += '<div class="field"><label id="f-url-label">登录入口 URL' +
+            (p.requiresEntry ? ' <span style="color:var(--danger)">*</span>' : '') +
+            '</label><input id="f-url" type="text" spellcheck="false" placeholder="' +
+            esc(p.requiresEntry ? '粘贴该平台的登录入口网址，例如 https://example.com/login' : '') +
+            '" value="' + esc(acc ? acc.url : p.entry) + '" /><div class="hint" id="f-url-hint">' +
+            esc(p.requiresEntry ? p.loginHint || '请填写该账号要打开的完整网址。' : '点击「打开工作台」时新标签访问这个地址。') +
+            '</div></div>';
     html += '<div class="field"><label>备注</label><textarea id="f-note" maxlength="500" ' +
             'placeholder="账号用途、发布方向、注意事项…">' + esc(acc ? acc.note : '') + '</textarea></div>';
     html += '<div class="notice">纯网页版不会保存该平台的密码，也不会读取浏览器的登录 Cookie —— ' +
@@ -1089,12 +1111,22 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     var sel = $('f-platform');
     if (sel) {
       sel.addEventListener('change', function () {
-        var np = platformOf(sel.value);
+        var np = platformOf(sel.value) || {};
         var urlInput = $('f-url');
+        var hint = $('f-url-hint');
+        var label = $('f-url-label');
+        var need = !!np.requiresEntry;
         if (urlInput) {
           var v = urlInput.value.trim();
-          var isDefault = PLATFORMS.some(function (x) { return x.entry === v; });
-          if (!v || isDefault) urlInput.value = np.entry;
+          var isDefault = PLATFORMS.some(function (x) { return x.entry && x.entry === v; });
+          if (!v || isDefault) urlInput.value = np.entry || '';
+          urlInput.placeholder = need ? '粘贴该平台的登录入口网址，例如 https://example.com/login' : '';
+        }
+        if (label) label.innerHTML = '登录入口 URL' + (need ? ' <span style="color:var(--danger)">*</span>' : '');
+        if (hint) hint.textContent = need ? np.loginHint || '请填写该账号要打开的完整网址。' : '点击「打开工作台」时新标签访问这个地址。';
+        var aliasInput = $('f-alias');
+        if (aliasInput && !aliasInput.value.trim()) {
+          aliasInput.placeholder = need ? '例如：该平台的账号名 / 备用号' : '例如：' + np.name + '·主号 / 矩阵号A';
         }
       });
     }
@@ -1109,6 +1141,11 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     var note = $('f-note').value;
 
     if (!alias) { toast('请填写账号别名', 'err'); $('f-alias').focus(); return; }
+    if ((platformOf(platform) || {}).requiresEntry && !url) {
+      toast('这个平台没有预设入口，请填写登录入口 URL', 'err');
+      $('f-url').focus();
+      return;
+    }
     if (url && !/^https?:\/\//i.test(url)) { toast('登录入口 URL 必须以 http:// 或 https:// 开头', 'err'); return; }
 
     var payload = { platform: platform, alias: alias, status: status, url: url, note: note };
@@ -1161,7 +1198,7 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
             '<span>账号别名、备注、URL、排序、状态保存在本浏览器的 localStorage；不含任何第三方登录凭据。</span></div></div>';
     html += '<div class="scroll-box" id="lsInfo">正在读取…</div>';
     html += '<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">' +
-            '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' +
+            '<button class="btn" data-act="quick-seed">快速创建一批账号位（每个平台 3 个）</button>' +
             '<button class="btn" data-act="export">导出 JSON</button>' +
             '<button class="btn danger" data-act="reset-all">清空全部账号</button></div>';
 
@@ -1476,7 +1513,7 @@ html[data-theme="dark"] .embed-frame-wrap{background:#1d2027}
     bindEvents();
     refreshAll();
     if (!state.accounts.length) {
-      toast('还没有账号：点「添加账号」，或先「快速创建 3×4 个账号位」体验', 'info');
+      toast('还没有账号：点「添加账号」，或先「快速创建一批账号位（每个平台 3 个）」体验', 'info');
     }
   }
 

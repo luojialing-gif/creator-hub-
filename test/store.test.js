@@ -130,6 +130,23 @@ try {
 }
 ok(!threw, '非法入参不抛异常，只返回 error', threw);
 
+// 14. 自定义平台：没有预设入口，必须由使用者自己填，且入口不能被清空
+const dir2 = fs.mkdtempSync(path.join(os.tmpdir(), 'creatorhub-custom-'));
+store.init(dir2);
+const cs = store.load();
+ok(!!store.upsertAccount(cs.state, { platform: 'custom', alias: '知乎主号' }).error,
+  '自定义平台不填登录入口被拒绝');
+const c1 = store.upsertAccount(cs.state, { platform: 'custom', alias: '知乎主号', url: 'https://www.zhihu.com/creator' });
+ok(!c1.error && c1.account.url === 'https://www.zhihu.com/creator',
+  '自定义平台填了入口即可保存', c1.error || c1.account.url);
+const c2 = store.upsertAccount(cs.state, { platform: 'custom', alias: 'B站主号', url: 'https://member.bilibili.com/platform/home' });
+ok(!c2.error && c2.account.slot === 2, '自定义平台下多个账号各占独立 slot', c2.account && c2.account.slot);
+ok(!!store.upsertAccount(cs.state, { id: c1.account.id, platform: 'custom', alias: '知乎主号', url: '' }).error,
+  '自定义平台的入口不能被清空');
+ok(cs.state.accounts.filter((a) => a.platform === 'custom').every((a) => a.platform === 'custom' && a.url),
+  '自定义账号的入口逐条独立保存');
+fs.rmSync(dir2, { recursive: true, force: true });
+
 fs.rmSync(dir, { recursive: true, force: true });
 
 const failed = results.filter((x) => !x.pass);

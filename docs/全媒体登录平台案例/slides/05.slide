@@ -1,0 +1,72 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    一个窗口，五个平台，各自独立
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flexDirection: 'row', marginTop: 32, height: 504 }}>
+    <Box style={{ width: 660, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 16, padding: 12, flexDirection: 'row' }}>
+      <Box style={{ width: 118, background: '#3B4A37', borderRadius: 12, padding: 14, justifyContent: 'space-around' }}>
+        <Text style={{ fontSize: 14, color: '#F7FBF4' }}>抖音</Text>
+        <Text style={{ fontSize: 14, color: '#CFE0C3' }}>小红书</Text>
+        <Text style={{ fontSize: 14, color: '#CFE0C3' }}>微博</Text>
+        <Text style={{ fontSize: 14, color: '#CFE0C3' }}>视频号</Text>
+        <Text style={{ fontSize: 14, color: '#CFE0C3' }}>快手</Text>
+      </Box>
+
+      <Box style={{ flex: 1, marginLeft: 12, justifyContent: 'center', flexDirection: 'column', gap: 14 }}>
+        <Box style={{ height: 138, background: '#EEF5EA', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#2F3A2C' }}>娱乐狸花酱</Text>
+            <Text style={{ fontSize: 14, color: '#6B7A66', marginTop: 6 }}>登录态正常 · 新建窗口</Text>
+          </Box>
+          <Box style={{ width: 10, height: 10, borderRadius: 5, background: '#5E7A56' }} />
+        </Box>
+
+        <Box style={{ height: 138, background: '#EEF5EA', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#2F3A2C' }}>影像的十三帧</Text>
+            <Text style={{ fontSize: 14, color: '#6B7A66', marginTop: 6 }}>登录态正常 · 新建窗口</Text>
+          </Box>
+          <Box style={{ width: 10, height: 10, borderRadius: 5, background: '#5E7A56' }} />
+        </Box>
+
+        <Box style={{ height: 138, background: '#EEF5EA', borderRadius: 10, padding: 18, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box style={{ flexDirection: 'column' }}>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#2F3A2C' }}>备用号 01</Text>
+            <Text style={{ fontSize: 14, color: '#C2703D', marginTop: 6 }}>疑似需要重新登录</Text>
+          </Box>
+          <Box style={{ width: 10, height: 10, borderRadius: 5, background: '#C2703D' }} />
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ flex: 1, marginLeft: 40, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Box style={{ flexDirection: 'column', borderBottom: '1px solid #D9E6D0', paddingBottom: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5E7A56' }}>一窗聚合</Text>
+        <Text style={{ fontSize: 18, color: '#2F3A2C', lineHeight: 1.5, marginTop: 8 }}>五个平台并排，不用再翻书签</Text>
+      </Box>
+      <Box style={{ flexDirection: 'column', borderBottom: '1px solid #D9E6D0', paddingBottom: 20, marginTop: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5E7A56' }}>独立登录态</Text>
+        <Text style={{ fontSize: 18, color: '#2F3A2C', lineHeight: 1.5, marginTop: 8 }}>同平台多号互不顶号，各有各的分区</Text>
+      </Box>
+      <Box style={{ flexDirection: 'column', paddingBottom: 20, marginTop: 20 }}>
+        <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#5E7A56' }}>静默保活</Text>
+        <Text style={{ fontSize: 18, color: '#2F3A2C', lineHeight: 1.5, marginTop: 8 }}>每 4~6 小时自动续一次，不打扰你</Text>
+      </Box>
+
+      <Box style={{ background: '#5E7A56', borderRadius: 12, padding: 20 }}>
+        <Text style={{ fontSize: 18, color: '#F7FBF4', lineHeight: 1.5 }}>
+          状态写在卡片上，掉了会变橙——不用自己发现
+        </Text>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>05</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

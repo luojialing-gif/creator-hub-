@@ -27,3 +27,8 @@ Partitions/
 .ebtmp/
 .ebcache/
 .fakehome/
+
+# 本地打包产物与交付合集（体积大，不入库）
+dist-downloads/
+交付-全媒体登录平台/
+output/

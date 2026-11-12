@@ -1,0 +1,65 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    它能干什么，不能干什么
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flexDirection: 'row', marginTop: 32, height: 360 }}>
+    <Box style={{ width: 560, background: '#3B4A37', borderRadius: 16, padding: 32, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#F7FBF4' }}>会做的</Text>
+      <Box style={{ flexDirection: 'column', marginTop: 24, gap: 22 }}>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#A9C19D', width: 22 }}>●</Text>
+          <Text style={{ fontSize: 20, color: '#F7FBF4' }}>隔离登录态，每账号一个独立分区</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#A9C19D', width: 22 }}>●</Text>
+          <Text style={{ fontSize: 20, color: '#F7FBF4' }}>聚合入口，五个平台一窗直达</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#A9C19D', width: 22 }}>●</Text>
+          <Text style={{ fontSize: 20, color: '#F7FBF4' }}>定时保活，每 4~6 小时静默访问一次</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#A9C19D', width: 22 }}>●</Text>
+          <Text style={{ fontSize: 20, color: '#F7FBF4' }}>巡检提醒，掉了在卡片上标橙</Text>
+        </Box>
+      </Box>
+    </Box>
+
+    <Box style={{ flex: 1, marginLeft: 40, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 16, padding: 32, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2F3A2C' }}>不做的</Text>
+      <Box style={{ flexDirection: 'column', marginTop: 24, gap: 22 }}>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#C2703D', width: 22 }}>×</Text>
+          <Text style={{ fontSize: 20, color: '#2F3A2C' }}>不代为操作，也不自动发布</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#C2703D', width: 22 }}>×</Text>
+          <Text style={{ fontSize: 20, color: '#2F3A2C' }}>不读取、不存储、不导出 Cookie 与密码</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#C2703D', width: 22 }}>×</Text>
+          <Text style={{ fontSize: 20, color: '#2F3A2C' }}>不调平台接口，不绕验证码与风控</Text>
+        </Box>
+        <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Text style={{ fontSize: 14, color: '#C2703D', width: 22 }}>×</Text>
+          <Text style={{ fontSize: 20, color: '#2F3A2C' }}>数据不出本机，不上传任何服务器</Text>
+        </Box>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ marginTop: 24, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 22 }}>
+    <Text style={{ fontSize: 18, color: '#2F3A2C', lineHeight: 1.5 }}>
+      登录态能保多久最终由平台决定 —— 工具只提供条件，并<span style={{ fontWeight: 'bold', color: '#5E7A56' }}>尽早告诉你</span>
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>08</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

@@ -1,0 +1,47 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    不止是二创岗位
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flexDirection: 'row', marginTop: 32, height: 504 }}>
+    <Box style={{ width: 620, background: '#3B4A37', borderRadius: 16, padding: 36, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Text style={{ fontSize: 14, color: '#CFE0C3', letterSpacing: 3 }}>判断标准</Text>
+      <Box style={{ flexDirection: 'column' }}>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.5 }}>多系统</Text>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.5 }}>多账号</Text>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.5 }}>反复登录</Text>
+        <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.5 }}>入口分散</Text>
+      </Box>
+      <Text style={{ fontSize: 18, color: '#CFE0C3', lineHeight: 1.5 }}>
+        四条同时命中，这套做法就能直接搬 —— 换的只是平台配置
+      </Text>
+    </Box>
+
+    <Box style={{ flex: 1, marginLeft: 40, flexDirection: 'column', justifyContent: 'space-between' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 110, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C' }}>多店运营</Text>
+        <Text style={{ fontSize: 18, color: '#6B7A66' }}>淘宝 / 京东 / 抖店多个后台</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 110, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C' }}>客服社群</Text>
+        <Text style={{ fontSize: 18, color: '#6B7A66' }}>多平台工单与消息后台</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 110, borderBottom: '1px solid #D9E6D0', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C' }}>投放优化</Text>
+        <Text style={{ fontSize: 18, color: '#6B7A66' }}>多个广告账户来回切</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 110, justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C' }}>财务对账</Text>
+        <Text style={{ fontSize: 18, color: '#6B7A66' }}>多家商户与银行后台</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>09</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

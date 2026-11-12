@@ -88,6 +88,13 @@ function classifyProbeResult(input) {
     return { state: 'unknown', note: '静默加载失败，这次没判断出来' };
   }
 
+  // 既没有地址特征、也没有页面文字判据（例如使用者自建的自定义平台）：
+  // 只能确认页面打得开，不能断定登录态。宁可给「未确认」，也不冒充「正常」——
+  // 误报正常会让人错过真正掉登录的账号，比不给结论更糟。
+  if (!hints.length && !(input.pageTexts || []).length) {
+    return { state: 'unknown', note: '该平台没有内置登录页判据，只能确认页面可打开，请人工确认登录态' };
+  }
+
   const hit = hints.find((h) => h && lower.indexOf(h) !== -1);
   if (!hit) {
     // URL 没命中登录页特征，再看页面可见文字里有没有「扫码登录」这类掉登录提示。

@@ -1,6 +1,6 @@
 {
   "name": "creator-hub",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "多平台创作者中心聚合工作台（Electron 桌面版）— 抖音 / 小红书 / 视频号 / 快手，多账号独立 session 切换",
   "main": "src/main.js",

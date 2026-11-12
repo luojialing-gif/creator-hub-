@@ -134,9 +134,46 @@ function fakeProbe(finalUrl, counter) {
 
   section('3. 每个平台都配齐巡检参数（新品台漏配会静默失效）');
   PLATFORMS.forEach((p) => {
+    if (p.noProbeJudge) {
+      // 没有判据的平台（自定义）：允许为空，但必须显式声明，且巡检不能给「正常」结论
+      ok(Array.isArray(p.loginHints) && p.loginHints.length === 0, p.name + ' 声明无判据时不应配登录页特征');
+      ok(Array.isArray(p.loginTexts) && p.loginTexts.length === 0, p.name + ' 声明无判据时不应配页面文字特征');
+      ok(p.requiresEntry === true, p.name + ' 无判据平台必须同时声明「需自填入口」');
+      return;
+    }
     ok(Array.isArray(p.loginHints) && p.loginHints.length > 0, p.name + ' 配了登录页特征');
+    ok(Array.isArray(p.loginTexts) && p.loginTexts.length > 0, p.name + ' 配了页面文字特征');
     ok(p.healthProbe === 'entry' || p.healthProbe === 'post', p.name + ' 配了巡检地址类型');
   });
+
+  section('3.1 新增平台与自定义平台的判据');
+  const xingtu = getPlatform('xingtu');
+  const pgy = getPlatform('pgy');
+  const custom = getPlatform('custom');
+  ok(!!xingtu && !!pgy && !!custom, '星图 / 蒲公英 / 自定义 已定义');
+  ok(xingtu.entry.indexOf('xingtu.cn') !== -1, '星图入口指向 xingtu.cn');
+  ok(pgy.entry.indexOf('pgy.xiaohongshu.com') !== -1, '蒲公英入口指向 pgy.xiaohongshu.com');
+  ok(custom.entry === '' && custom.requiresEntry === true, '自定义平台没有预设入口且标记为必须自填');
+  ok(judgement('https://www.xingtu.cn/sup/creator/user/overview', xingtu.entry, xingtu).state === 'ok',
+    '星图工作台 → 正常');
+  ok(judgement('https://www.xingtu.cn/login?redirect=%2Fsup', xingtu.entry, xingtu).state === 'needs-login',
+    '星图被跳到登录页 → 需重登');
+  ok(judgement('https://pgy.xiaohongshu.com/solar/pre-trade/note-manage', pgy.entry, pgy).state === 'ok',
+    '蒲公英工作台 → 正常');
+  ok(judgement('https://pgy.xiaohongshu.com/login', pgy.entry, pgy).state === 'needs-login',
+    '蒲公英被跳到登录页 → 需重登');
+
+  // 自定义平台：没有判据时只能空口确认页面打开了，绝不能冒充「正常」
+  const customProbe = classifyProbeResult({
+    loaded: 'ok',
+    finalUrl: 'https://example.com/dashboard',
+    probeUrl: 'https://example.com/dashboard',
+    hints: custom.loginHints,
+    pageTexts: custom.loginTexts,
+    pageText: '欢迎回来，今天也要好好发内容'
+  });
+  ok(customProbe.state === 'unknown', '自定义平台无判据 → 不给结论（不误报正常）', customProbe.state);
+  ok(customProbe.note.indexOf('人工确认') !== -1, '自定义平台的结果里明确提示人工确认', customProbe.note);
 
   section('4. 落盘与凭据加固');
   const sA = fakeSession([

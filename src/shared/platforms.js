@@ -16,6 +16,9 @@
  *                 弹出扫码登录浮层，纯靠地址判断会漏报。巡检加载完成后只读地取一次页面可见
  *                 文字，命中其中任一子串即判「疑似掉登录」。仅做本地字符串比对，不上传内容、
  *                 不读取表单值、不注入脚本。
+ * requiresEntry : 该平台没有预设入口地址，新建账号时必须由使用者填写「登录入口 URL」。
+ * noProbeJudge  : 该平台没有内置登录页判据。巡检只能确认页面打得开，不能断定登录态，
+ *                 因此结果一律给「未确认」，不冒充「正常」。
  */
 const PLATFORMS = [
   {
@@ -34,6 +37,21 @@ const PLATFORMS = [
     loginTexts: ['扫码登录', '登录抖音', '验证码登录', '立即登录']
   },
   {
+    id: 'xingtu',
+    name: '星图',
+    abbr: '星',
+    color: '#3D46C8',
+    colorDark: '#8A93F5',
+    entry: 'https://www.xingtu.cn/?redirect_uri=https://www.xingtu.cn/sup/creator/user/overview',
+    origin: 'https://www.xingtu.cn',
+    note: '抖音星图 · 创作者商业合作平台',
+    loginHint: '',
+    embedBlocked: true,
+    healthProbe: 'entry',
+    loginHints: ['login', 'passport', 'sso.', 'signin'],
+    loginTexts: ['扫码登录', '登录星图', '手机号登录', '验证码登录', '立即登录']
+  },
+  {
     id: 'xhs',
     name: '小红书',
     abbr: '书',
@@ -47,6 +65,21 @@ const PLATFORMS = [
     healthProbe: 'entry',
     loginHints: ['/login', 'passport', 'sso.'],
     loginTexts: ['扫码登录', '登录小红书', '验证码登录', '手机号登录']
+  },
+  {
+    id: 'pgy',
+    name: '蒲公英',
+    abbr: '蒲',
+    color: '#C9425A',
+    colorDark: '#E86B80',
+    entry: 'https://pgy.xiaohongshu.com',
+    origin: 'https://pgy.xiaohongshu.com',
+    note: '小红书蒲公英 · 创作者商业合作平台',
+    loginHint: '',
+    embedBlocked: true,
+    healthProbe: 'entry',
+    loginHints: ['login', 'passport', 'sso.', 'signin'],
+    loginTexts: ['扫码登录', '登录小红书', '手机号登录', '密码登录', '立即登录']
   },
   {
     id: 'wxch',
@@ -77,6 +110,24 @@ const PLATFORMS = [
     healthProbe: 'entry',
     loginHints: ['/login', 'passport', 'sso.'],
     loginTexts: ['扫码登录', '登录快手', '验证码登录', '手机号登录']
+  },
+  {
+    id: 'custom',
+    name: '自定义',
+    abbr: '自',
+    color: '#6B7280',
+    colorDark: '#9AA3AF',
+    // 没有预设入口：新建账号时必须填该账号自己的登录入口 URL，一对一存在账号的 url 字段里。
+    entry: '',
+    origin: '',
+    note: '自定义平台 · 登录入口由使用者填写',
+    loginHint: '自定义平台没有预设入口，请填写完整网址（以 http:// 或 https:// 开头）。',
+    embedBlocked: true,
+    healthProbe: 'post',
+    requiresEntry: true,
+    noProbeJudge: true,
+    loginHints: [],
+    loginTexts: []
   }
 ];
 

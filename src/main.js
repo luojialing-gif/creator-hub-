@@ -939,6 +939,8 @@ function registerIpc() {
   ipcMain.handle('hub:seed', () => {
     let created = 0;
     PLATFORMS.forEach((p) => {
+      // 没有预设入口的平台（自定义）不预建：它必须由使用者填自己的网址
+      if (p.requiresEntry || !p.entry) return;
       const count = state.accounts.filter((a) => a.platform === p.id).length;
       for (let i = count + 1; i <= 3; i += 1) {
         const res = store.upsertAccount(state, {

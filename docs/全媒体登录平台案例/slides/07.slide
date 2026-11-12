@@ -1,0 +1,58 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Text style={{ fontSize: 36, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.2 }}>
+    从一句需求，到一个能装上的软件
+  </Text>
+  <Box style={{ width: 1160, height: 1, background: '#D9E6D0', marginTop: 20 }} />
+
+  <Box style={{ flex: 1, flexDirection: 'column', justifyContent: 'center' }}>
+    <Box style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Box style={{ width: 160, height: 240, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D' }}>01</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.4 }}>场景<br />拆解</Text>
+        <Text style={{ fontSize: 14, color: '#6B7A66', lineHeight: 1.5 }}>平台 / 账号 / 操作路径</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#A9C19D' }}>→</Text>
+      <Box style={{ width: 160, height: 240, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D' }}>02</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.4 }}>路线<br />选型</Text>
+        <Text style={{ fontSize: 14, color: '#6B7A66', lineHeight: 1.5 }}>隔离方案取舍</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#A9C19D' }}>→</Text>
+      <Box style={{ width: 160, height: 240, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D' }}>03</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.4 }}>数据<br />层</Text>
+        <Text style={{ fontSize: 14, color: '#6B7A66', lineHeight: 1.5 }}>清单 / 排序 / 导入导出</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#A9C19D' }}>→</Text>
+      <Box style={{ width: 160, height: 240, background: '#5E7A56', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#CFE0C3' }}>04</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.4 }}>会话<br />守护</Text>
+        <Text style={{ fontSize: 14, color: '#CFE0C3', lineHeight: 1.5 }}>加固 · 落盘 · 保活 · 巡检</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#A9C19D' }}>→</Text>
+      <Box style={{ width: 160, height: 240, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D' }}>05</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.4 }}>界面<br />交互</Text>
+        <Text style={{ fontSize: 14, color: '#6B7A66', lineHeight: 1.5 }}>一窗聚合入口</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#A9C19D' }}>→</Text>
+      <Box style={{ width: 160, height: 240, background: '#F7FBF4', border: '1px solid #D9E6D0', borderRadius: 12, padding: 20, flexDirection: 'column', justifyContent: 'space-between' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D' }}>06</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.4 }}>测试<br />分发</Text>
+        <Text style={{ fontSize: 14, color: '#6B7A66', lineHeight: 1.5 }}>测试 · 打包 · 分发</Text>
+      </Box>
+    </Box>
+
+    <Box style={{ marginTop: 56, background: '#3B4A37', borderRadius: 12, padding: 26, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+      <Text style={{ fontSize: 20, color: '#F7FBF4', lineHeight: 1.5 }}>输出：一个在 Windows 和 Mac 上都能直接装上的本地工具</Text>
+      <Text style={{ fontSize: 20, color: '#CFE0C3' }}>全程无服务器</Text>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>07</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

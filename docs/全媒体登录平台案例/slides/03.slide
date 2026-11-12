@@ -1,0 +1,56 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column' }}>
+  <Box style={{ flexDirection: 'row', height: 600 }}>
+    <Box style={{ width: 300, background: '#5E7A56', borderRadius: 16, padding: 32, flexDirection: 'column', justifyContent: 'center' }}>
+      <Text style={{ fontSize: 20, color: '#CFE0C3', letterSpacing: 2, marginBottom: 24 }}>需求原文</Text>
+      <Box style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1 }}>1788</Text>
+        <Text style={{ fontSize: 20, color: '#CFE0C3', marginLeft: 8, marginBottom: 8 }}>字</Text>
+      </Box>
+    </Box>
+
+    <Box style={{ flex: 1, marginLeft: 32, flexDirection: 'column' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>01</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>目标</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>四后台 → 一界面 · 每平台 ≥3 号</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>02</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>平台</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>抖音 · 小红书 · 视频号 · 快手，各带入口</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>03</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>账号</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>增删改 · 六个字段 · 本地 JSON 导入导出</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>04</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>登录态</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>独立 session · 一号一实例 · 重启仍在</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>05</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>功能</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>搜索 / 添加 / 导入导出 · 卡片可编辑</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85, borderBottom: '1px solid #D9E6D0' }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>06</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>边界</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>不存密码 · 不传 Cookie · 不绕风控</Text>
+      </Box>
+      <Box style={{ flexDirection: 'row', alignItems: 'center', height: 85 }}>
+        <Text style={{ fontSize: 14, color: '#A9C19D', letterSpacing: 1, width: 44 }}>07</Text>
+        <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#2F3A2C', width: 124 }}>验收</Text>
+        <Text style={{ fontSize: 17, color: '#6B7A66', flex: 1 }}>四分组 · 三点开 · iframe 失败要提示</Text>
+      </Box>
+    </Box>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>03</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

@@ -1,0 +1,26 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+  <Box style={{ flexDirection: 'column', maxWidth: 780 }}>
+    <Text style={{ fontSize: 72, fontWeight: 'bold', color: '#2F3A2C', lineHeight: 1.15, letterSpacing: 2 }}>
+      全媒体登录平台
+    </Text>
+    <Box style={{ width: 96, height: 4, background: '#5E7A56', borderRadius: 2, marginTop: 30, marginBottom: 26 }} />
+    <Text style={{ fontSize: 24, color: '#6B7A66', lineHeight: 1.5 }}>
+      一个人 · 五个平台 · 十几个账号
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 60, maxWidth: 520 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66', letterSpacing: 1 }}>
+      多平台创作者中心聚合工作台 · v1.1.0
+    </Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', right: 60, bottom: 60, width: 200, height: 200, background: '#5E7A56', borderRadius: 16, flexDirection: 'column', justifyContent: 'flex-end', padding: 24 }}>
+    <Text style={{ fontSize: 32, fontWeight: 'bold', color: '#F7FBF4', lineHeight: 1.2 }}>
+      2026
+    </Text>
+    <Text style={{ fontSize: 14, color: '#CFE0C3', letterSpacing: 2, marginTop: 6 }}>
+      AI CASE
+    </Text>
+  </Box>
+</Slide>

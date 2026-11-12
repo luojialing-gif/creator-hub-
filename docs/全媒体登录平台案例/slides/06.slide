@@ -1,0 +1,43 @@
+<Slide style={{ width: 1280, height: 720, background: '#EEF5EA', padding: 60, position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+  <Box style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <Box style={{ width: 640, flexDirection: 'column' }}>
+      <Text style={{ fontSize: 14, color: '#6B7A66', letterSpacing: 3 }}>单次进出创作者后台</Text>
+      <Box style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 28 }}>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#A9C19D', lineHeight: 1 }}>60</Text>
+        <Text style={{ fontSize: 20, color: '#A9C19D', marginBottom: 10 }}>s</Text>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#D9E6D0', lineHeight: 1, marginLeft: 16, marginRight: 16 }}>→</Text>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#5E7A56', lineHeight: 1 }}>10</Text>
+        <Text style={{ fontSize: 20, color: '#5E7A56', marginBottom: 10 }}>s</Text>
+      </Box>
+      <Text style={{ fontSize: 20, color: '#6B7A66', lineHeight: 1.5, marginTop: 20 }}>
+        一次点击 vs 打开浏览器、找书签、登录、切号
+      </Text>
+    </Box>
+
+    <Box style={{ width: 1, height: 240, background: '#D9E6D0', marginLeft: 40, marginRight: 60 }} />
+
+    <Box style={{ flex: 1, flexDirection: 'column' }}>
+      <Box style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+        <Text style={{ fontSize: 96, fontWeight: 'bold', color: '#C2703D', lineHeight: 1 }}>83</Text>
+        <Text style={{ fontSize: 20, color: '#C2703D', marginLeft: 6, marginBottom: 10 }}>%</Text>
+      </Box>
+      <Text style={{ fontSize: 24, fontWeight: 'bold', color: '#2F3A2C', marginTop: 16 }}>
+        时间省掉，效率约 6 倍
+      </Text>
+      <Text style={{ fontSize: 20, color: '#6B7A66', lineHeight: 1.5, marginTop: 10 }}>
+        每天省 17 分钟 · 每月省 6.1 小时
+      </Text>
+    </Box>
+  </Box>
+
+  <Box style={{ marginTop: 36 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>口径：日均进出 20 次，每月按 22 个工作日计</Text>
+  </Box>
+
+  <Box style={{ position: 'absolute', left: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>06</Text>
+  </Box>
+  <Box style={{ position: 'absolute', right: 60, bottom: 30 }}>
+    <Text style={{ fontSize: 14, color: '#6B7A66' }}>全媒体登录平台 · AI 案例</Text>
+  </Box>
+</Slide>

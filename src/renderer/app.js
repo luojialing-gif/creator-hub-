@@ -308,7 +308,7 @@
         '<button class="btn primary" data-act="add-account"' +
         (state.ui.platform === 'all' ? '' : ' data-platform="' + state.ui.platform + '"') +
         '>添加账号</button>' +
-        (noAccountAtAll ? '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' : '') +
+        (noAccountAtAll ? '<button class="btn" data-act="quick-seed">快速创建一批账号位（每个平台 3 个）</button>' : '') +
         '</div></div>';
       return;
     }
@@ -681,6 +681,32 @@
       .join('');
   }
 
+  /**
+   * 切换平台时同步「登录入口 URL」这一格。
+   * 有预设入口的平台直接带出地址；没有预设入口的（自定义）清空并标为必填，
+   * 由使用者自己粘贴网址。已手填的地址不会被覆盖。
+   */
+  function applyEntryField(p) {
+    var urlInput = $('f-url');
+    var hint = $('f-url-hint');
+    var label = $('f-url-label');
+    if (!urlInput) return;
+    var need = !!p.requiresEntry;
+    var cur = urlInput.value.trim();
+    var isPreset = !cur || state.platforms.some(function (x) {
+      return x.entry && x.entry === cur;
+    });
+    if (isPreset) urlInput.value = p.entry || '';
+    urlInput.placeholder = need ? '粘贴该平台的登录入口网址，例如 https://example.com/login' : '';
+    if (label) label.innerHTML = '登录入口 URL' + (need ? ' <span style="color:var(--danger)">*</span>' : '');
+    if (hint) hint.textContent = need ? p.loginHint || '请填写该账号要打开的完整网址。' : '点「打开工作台」时首先访问这个地址。';
+    // 别名提示跟着平台走，否则选了自定义还写着「抖音·主号」
+    var aliasInput = $('f-alias');
+    if (aliasInput && !aliasInput.value.trim()) {
+      aliasInput.placeholder = need ? '例如：该平台的账号名 / 备用号' : '例如：' + p.name + '·主号 / 矩阵号A';
+    }
+  }
+
   function statusOptionsField(selected) {
     return STATUS_ORDER.map(function (s) {
       if (state.statuses.length && state.statuses.indexOf(s) === -1) return '';
@@ -718,9 +744,15 @@
       '" placeholder="越小越靠前，留空自动" /></div>' +
       '</div>';
     html +=
-      '<div class="field"><label>登录入口 URL</label><input id="f-url" type="text" spellcheck="false" value="' +
+      '<div class="field"><label id="f-url-label">登录入口 URL' +
+      (p.requiresEntry ? ' <span style="color:var(--danger)">*</span>' : '') +
+      '</label><input id="f-url" type="text" spellcheck="false" placeholder="' +
+      esc(p.requiresEntry ? '粘贴该平台的登录入口网址，例如 https://example.com/login' : '') +
+      '" value="' +
       esc(acc ? acc.url : p.entry) +
-      '" /><div class="hint">点「打开工作台」时首先访问这个地址。</div></div>';
+      '" /><div class="hint" id="f-url-hint">' +
+      esc(p.requiresEntry ? p.loginHint || '请填写该账号要打开的完整网址。' : '点「打开工作台」时首先访问这个地址。') +
+      '</div></div>';
     html +=
       '<div class="field"><label>登录后 URL（可选）</label><input id="f-post" type="text" spellcheck="false" placeholder="例如视频号登录后跳转到的创作者工作台地址" value="' +
       esc(acc ? acc.postLoginUrl : '') +
@@ -757,13 +789,7 @@
     var sel = $('f-platform');
     if (sel) {
       sel.addEventListener('change', function () {
-        var np = platformOf(sel.value);
-        var urlInput = $('f-url');
-        if (urlInput && (!urlInput.value.trim() || state.platforms.some(function (x) {
-          return x.entry === urlInput.value.trim();
-        }))) {
-          urlInput.value = np.entry;
-        }
+        applyEntryField(platformOf(sel.value));
       });
     }
   }
@@ -780,6 +806,11 @@
     if (!alias) {
       toast('请填写账号别名', 'err');
       $('f-alias').focus();
+      return;
+    }
+    if (platformOf(platform).requiresEntry && !url) {
+      toast('这个平台没有预设入口，请填写登录入口 URL', 'err');
+      $('f-url').focus();
       return;
     }
     if (url && !/^https?:\/\//i.test(url)) {
@@ -900,7 +931,7 @@
       '<button class="btn" data-act="open-data-dir">打开数据目录</button>' +
       '<button class="btn" data-act="open-state-file">打开账号配置文件</button>' +
       '<button class="btn" data-act="release-views">释放后台视图</button>' +
-      '<button class="btn" data-act="quick-seed">快速创建 3×4 个账号位</button>' +
+      '<button class="btn" data-act="quick-seed">快速创建一批账号位（每个平台 3 个）</button>' +
       '</div>';
 
     html +=
@@ -1698,7 +1729,7 @@
       refreshAll();
 
       if (!state.accounts.length) {
-        toast('还没有账号：点「添加账号」，或先「快速创建 3×4 个账号位」体验多账号切换', 'info');
+        toast('还没有账号：点「添加账号」，或先「快速创建一批账号位（每个平台 3 个）」体验多账号切换', 'info');
       }
     });
   }
